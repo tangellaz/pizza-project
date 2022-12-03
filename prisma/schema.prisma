@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model pizza_components {
+  component_id Int       @id @default(autoincrement())
+  pizza_id     Int?
+  topping_id   Int?
+  toppings     toppings? @relation(fields: [topping_id], references: [topping_id], onDelete: Cascade, onUpdate: NoAction)
+  pizzas       pizzas?   @relation(fields: [pizza_id], references: [pizza_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model pizzas {
+  pizza_id         Int                @id @default(autoincrement())
+  pizza_name       String             @unique(map: "sqlite_autoindex_pizzas_1")
+  pizza_components pizza_components[]
+}
+
+model toppings {
+  topping_id       Int                @id @default(autoincrement())
+  topping_name     String             @unique(map: "sqlite_autoindex_toppings_1")
+  pizza_components pizza_components[]
+}
