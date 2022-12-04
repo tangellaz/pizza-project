@@ -15,6 +15,140 @@ a {
   box-sizing: border-box;
 }
 
+body{
+  --gap: 1rem;
+
+  --primary: #00e0ff;
+  --secondary: #EA1CE2;
+  --dark: #000000;
+  --light: #FFFFFF;
+
+  --transition: 0.2s all ease-in;
+
+  --svg-filter: invert(78%) sepia(31%) saturate(6753%) hue-rotate(144deg) brightness(103%) contrast(107%);
+
+  --box-shadow: 0px 0px 4px 4px rgb(255,255,255,0.25);
+  --focusShadow: 0 0 4px 4px rgb(255,255,255,0.25);
+
+  --btnText: var(--light);
+  --btnBackground: var(--dark);
+  --btnBorder: var(--light);
+  --btnShadow: none;
+  --btnPadding: calc(var(--gap)/2) var(--gap);
+
+  --btnTextHover: var(--light);
+  --btnBackgroundHover: var(--dark);
+  --btnBorderHover: var(--light);
+  --btnShadowHover: 0px 0px 4px 4px rgba(255, 255, 255, 0.5);
+
+  overflow-x: hidden;
+  background: var(--dark);
+  color: var(--light);
+  font-size: clamp(1rem, 0.77rem + 1.14vw, 1.5rem);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--light);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-family:  'Open Sans', serif;
+  font-size: clamp(2.5rem, 2.05rem + 2.27vw, 3.5rem);
+}
+
+h2 {
+  font-family:  'Open Sans', serif;
+  font-size: clamp(2rem, 1.55rem + 2.27vw, 3rem);
+}
+
+h3 {
+  font-family:  'Open Sans', serif;
+  font-size: clamp(1.25rem, 0.8rem + 2.27vw, 2.25rem);
+}
+
+h4 {
+  font-size: clamp(1rem, 0.77rem + 1.14vw, 1.5rem);
+}
+
+.subtitle {
+  color: var(--heading);
+  font-weight: 700;
+  line-height: 1.2;
+  font-size: clamp(1rem, 0.77rem + 1.14vw, 1.5rem);
+}
+
+p {
+  line-height: 1.35;
+}
+
+input,
+textarea,
+button,
+select {
+  line-height: normal;
+  font-weight: 500;
+  padding: 0.5rem;
+  border: 1px solid var(--light);
+  border-radius: 0.75rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 2px 2px rgb(255,255,255,0.25);
+}
+
+input::placeholder {
+  color: #000000;
+}
+
+button,
+input[type='submit'] {
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--btnText);
+  background: var(--btnBackground);
+  border: 2px solid var(--btnBorder);
+  padding: var(--btnPadding);
+  /*transition: var(--transition);*/
+  font-size: 1rem;
+  box-shadow: var(--btnShadow);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button:hover,
+  input[type='submit']:hover {
+    color: var(--btnTextHover);
+    background: var(--btnBackgroundHover);
+    border: 2px solid var(--btnBorderHover);
+    box-shadow: var(--btnShadowHover);
+  }  
+}
+
+button:active,
+input[type='submit']:active {
+  color: var(--btnTextHover);
+  background: var(--btnBackgroundHover);
+  border: 2px solid var(--btnBorderHover);
+  box-shadow: var(--btnShadowHover);
+}  
+
+button:focus,
+input[type='submit']:focus {
+  box-shadow: var(--focusShadow);
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

@@ -1,0 +1,120 @@
+.overlay {
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: var(--gap);
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: auto;
+}
+
+.card {
+  background: rgba(0,0,0,1);
+  border-radius: 0.75rem;
+  box-shadow: 0px 0px 4px 4px rgb(255,255,255,0.25);
+  padding: var(--gap);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  min-width: 304px;
+  max-width: 500px;
+}
+
+.card > button {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height: 2.25rem;
+  width: 2.25rem;
+  margin-left: auto;
+/*  margin-bottom: var(--gap);*/
+  background: rgba(0,0,0,1);
+  border-radius: 100%;
+  box-shadow: var(--box-shadow);
+  padding: 0.5rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card > button:hover {
+    /*opacity: 0.75;*/
+/*    background: rgba(255,255,255,0.15);*/
+    box-shadow: var(--btnShadowHover);
+  }
+}
+
+.card > button:active {
+  /*opacity: 0.75;*/
+/*  background: rgba(255,255,255,0.15);*/
+  box-shadow: var(--btnShadowHover);
+}
+
+.card > button > img {
+  width: 1rem;
+  height: 1rem;
+  z-index: 20;
+  filter: invert(100%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card > button:hover > img {
+    filter: var(--svg-filter);
+  }
+}
+.card > button:active > img {
+  filter: var(--svg-filter);
+}
+
+.card > h3 {
+  margin-bottom: var(--gap);
+}
+.card > p:first-of-type {
+  text-align: left;
+}
+
+.review {
+  padding: calc(var(--gap)/2);
+  margin-top: calc(var(--gap)/2);
+  border-radius: 0.75rem;
+  background: var(--photoCardBackground);
+}
+.review > h4 {
+  margin-bottom: calc(var(--gap)/2);
+}
+.review > p {
+  text-align: left;
+  font-size: clamp(0.75rem, 0.64rem + 0.57vw, 1rem);
+}
+.review > a {
+  border: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .review > a:hover {
+    border: none;
+  }
+}
+.review > a:active {
+  border: none;
+}
+.review > a > button {
+  font-size: clamp(0.75rem, 0.64rem + 0.57vw, 1rem);
+  font-weight: 400;
+  color: var(--linkColor);
+  background: none;
+  border: none;
+  box-shadow: none;
+  text-transform: lowercase;
+  padding-top: calc(var(--gap)/4);
+}
+@media (hover: hover) and (pointer: fine) {
+  .review > a > button:hover {
+    text-decoration: underline;
+  }
+}
+.review > a > button:active {
+  text-decoration: underline;
+}
