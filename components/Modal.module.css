@@ -25,7 +25,7 @@
   max-width: 500px;
 }
 
-.card > button {
+.card > button:first-of-type {
   display:flex;
   justify-content: center;
   align-items: center;
@@ -37,6 +37,9 @@
   border-radius: 100%;
   box-shadow: var(--box-shadow);
   padding: 0.5rem;
+}
+.card > button:last-of-type {
+  width: fit-content;
 }
 
 @media (hover: hover) and (pointer: fine) {

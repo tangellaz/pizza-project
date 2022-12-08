@@ -48,7 +48,7 @@ async function main() {
   // }
 
   // Create dynamic for multi column
-  // createDynamic('toppings',[{col_name:'toppings_id',value:1},{col_name:'toppings_name',value:'cheese'}])
+  // // createDynamic('toppings',[{col_name:'toppings_id',value:1},{col_name:'toppings_name',value:'cheese'}])
   const createDynamic = async(table:PrismaModelName,arr:ColAndVal[]) => {
     // const dataObj = {}
     // arr.map((obj:{col_name:string;value:string|number}) => Object.assign(dataObj,{[obj.col_name]: obj.value}))

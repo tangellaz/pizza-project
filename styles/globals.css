@@ -90,6 +90,12 @@ p {
   line-height: 1.35;
 }
 
+ul,
+li {
+  list-style: none;
+  padding: 0;
+}
+
 input,
 textarea,
 button,

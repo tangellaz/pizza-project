@@ -1,0 +1,25 @@
+@media only screen and (min-width: 0px) {
+  .footer {
+    background: var(--dark)
+  }
+  .Credit {
+    position: relative;
+    font-size: clamp(0.75rem, 0.64rem + 0.57vw, 1rem);
+    color: #FFFFFF;
+    text-align: center;
+    padding-bottom: calc(var(--gap)/2);
+  }
+
+  .Credit:before{
+    content: "";
+    display: block;
+    width: calc(100% + var(--gap));
+    transform: translateX(calc(-1*var(--gap)/2));
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
+/*    background: var(--pseudoBorderColor1a);*/
+    margin-bottom: calc(var(--gap)/2);
+  }
+}
+@media only screen and (min-width: 768px) {}
+@media only screen and (min-width: 1024px) {}

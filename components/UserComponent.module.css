@@ -1,0 +1,63 @@
+.listEdit {
+  min-width: 288px;
+  max-width: min(100%,300px);
+  margin-bottom: calc(var(--gap)/2);
+}
+
+.listEdit > li {
+  margin: calc(var(--gap)) 0;
+}
+
+.listEdit > li:after {
+    content: "";
+    display: block;
+    width: calc(100% + var(--gap));
+    transform: translateX(calc(-1*var(--gap)/2));
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
+    margin-top: var(--gap);
+/*    background: var(--pseudoBorderColor1a);*/
+}
+
+.listDisplay {
+  margin-left: calc(var(--gap));
+  margin-bottom: calc(var(--gap));
+}
+.listDisplay > li {
+  display: inline;
+  font-size: 1rem;
+}
+
+
+
+.actionBtn {
+  height: fit-content;
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem 0.25rem;
+  margin-left: calc(var(--gap)/2);
+}
+
+.actionBtn > img {
+  filter: invert(100%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .actionBtn:hover > img {
+    filter: var(--svg-filter);
+  }
+}
+.actionBtn:active > img {
+  filter: var(--svg-filter);
+}
+
+.editContainer {
+  display: flex;
+  width:100%;
+}
+.editContainer > button {
+  margin:auto;
+}
