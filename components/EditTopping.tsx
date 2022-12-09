@@ -26,15 +26,8 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData}:EditToppingIn
         topping_name: name
       }
       submitTopping(data)
-      // const response = await fetch('/api?user=owner', {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(data),
-      // })
-      
-      // if (!response.ok) {
-      //   throw new Error(response.statusText)
-      // }
+
+      // clean up
       setEditToppingId(NaN)
       setValue('')
       refreshData()

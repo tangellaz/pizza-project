@@ -15,6 +15,14 @@ export const deletePizza = async(pizza: pizzaData) => {
   }).then())
 }
 
+export const submitPizza = async(data: {pizza:pizzaData,toppings:toppingData[]}) => {
+  return await resolve(fetch('/api?user=chef', {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  }).then())
+}
+
 export const deleteTopping = async(topping: toppingData) => {
   console.log('DELETE TOPPING!')
   return await resolve(fetch('/api?user=owner', {

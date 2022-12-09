@@ -3,6 +3,10 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 import {
+  toppingData,
+  pizzaData,
+  componentData,
+
   findAllDynamic,
   findManyDynamic,
   createDynamic,
@@ -76,6 +80,17 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
           //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:1}],
           //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:2}],
           //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:3}]
+
+        const pizza:pizzaData = await createDynamic('pizzas',[{col_name:'pizza_name',value:data.pizza.pizza_name}])
+        console.log('pizza',pizza)
+        data.toppings.map(async(topping:toppingData)=>
+          await createDynamic('pizza_components',[
+            {col_name:'pizza_id',value:pizza.pizza_id},
+            {col_name:'topping_id',value:topping.topping_id}
+          ])
+        )
+        printData()
+
       } else if (user === 'owner') {
         // INSERT INTO toppings (topping_name)
         // VALUES ([variable name]);

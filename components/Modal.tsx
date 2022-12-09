@@ -8,15 +8,18 @@ import {
   pizzaData,
 } from '../prisma/utils'
 
+import {submitPizza} from '../src/api'
+
 type modalInputs = {
-  show: boolean;
-  onClose: ()=>void;
-  selectedPizza?: pizzaData;
-  selectedToppings?: toppingData[];
-  availableToppings?: toppingData[];
+  show: boolean,
+  onClose: ()=>void,
+  selectedPizza?: pizzaData,
+  selectedToppings?: toppingData[],
+  availableToppings?: toppingData[],
+  refreshData: () => void,
 }
 
-const Modal = ({ show, onClose, selectedPizza, selectedToppings, availableToppings }:modalInputs) => {
+const Modal = ({show, onClose, selectedPizza, selectedToppings, availableToppings, refreshData}:modalInputs) => {
 
   const [isBrowser,setIsBrowser] = useState(false);
   const [reviews,setReviews] = useState([]);
@@ -34,50 +37,37 @@ const Modal = ({ show, onClose, selectedPizza, selectedToppings, availableToppin
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement> ) => {
-    try{
-      e.preventDefault();
+    e.preventDefault();
 
-      let pizzaObj:pizzaData = {pizza_id: -999, pizza_name: ''}
-      let toppingList:toppingData[] = []
-
-      // if to handle data type of e.target
-      if(e.target instanceof HTMLFormElement) {
-        const formData = new FormData(e.target)
-        const data = formData.entries();
-        for (const [key,value] of data) {
-
-          // console.log(key,value)
-          /* key of type number is pizza name.
-          Ex:
-              1 pepperoni
-              pepperoni 1
-              cheese 2
-          */
-          if(Number.isFinite(parseInt(key))) {
-            pizzaObj = {pizza_id: parseInt(key), pizza_name: value.toString()}
-          } else {
-            toppingList.push({topping_id: parseInt(value.toString()), topping_name: key})
-          }
-        }
-      }
-
-      const data = {
-        pizza: pizzaObj,
-        toppings: toppingList
-      }
-      const response = await fetch('/api?user=chef', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      
-      if (!response.ok) {
-        throw new Error(response.statusText)
-      }
-    } catch(error) {
-      console.log("Oops something went wrong\n",error)
+    // initialize data to send
+    const data:{pizza:pizzaData,toppings:toppingData[]} = {
+      pizza: {pizza_id: -999, pizza_name: ''},
+      toppings: []
     }
 
+    // if to handle data type of e.target
+    if(e.target instanceof HTMLFormElement) {
+      const formData = new FormData(e.target)
+      const entry = formData.entries();
+      for (const [key,value] of entry) {
+
+        // console.log(key,value)
+        /* key of type number is pizza name.
+        Ex:
+            1 pepperoni
+            pepperoni 1
+            cheese 2
+        */
+        if(Number.isFinite(parseInt(key))) {
+          data.pizza = {pizza_id: parseInt(key), pizza_name: value.toString()}
+        } else {
+          data.toppings.push({topping_id: parseInt(value.toString()), topping_name: key})
+        }
+      }
+    }
+
+    await submitPizza(data)
+    refreshData()
   }
 
   const [pizza,setPizza] = useState<string>('')
@@ -137,20 +127,11 @@ const Modal = ({ show, onClose, selectedPizza, selectedToppings, availableToppin
                     </div>
                   )
                 }
-                {/*<input type="radio" name="action" id="track" value="track" /><label for="track">Track Submission</label><br />*/}
               </fieldset>
             </form>
             <button form="update-form" type="submit">
               {selectedPizza?.pizza_name?"Update":"Create"}
             </button>
-            {/*<h3>{selectedPizza?.pizza_name}</h3>
-            <p className="subtitle">Selected toppings</p>
-            <ul>
-              {selectedToppings?.map((topping)=><li key={topping.topping_name+topping.topping_id}>{topping.topping_name}</li>)}
-            </ul>*/}
-{/*            <ul>
-              {availableToppings?.map((topping)=><li key={topping.topping_name+topping.topping_id}>{topping.topping_name}</li>)}
-            </ul>*/}
           </div>
         </div>
 

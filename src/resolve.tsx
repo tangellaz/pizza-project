@@ -1,4 +1,4 @@
-export const resolve = async(promise: Promise<string|void>) => {
+export const resolve = async(promise: Promise<string|null>) => {
   type resolvedType = {
     data: string | null,
     error: string | null

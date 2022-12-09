@@ -15,6 +15,10 @@ import {
   componentData,
 } from '../prisma/utils'
 
+interface mapToppings {
+  [key: string]: toppingData[]
+}
+
 
 // export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function Home(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -22,6 +26,25 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   const router = useRouter()
   const refreshData = () => {
     router.replace(router.asPath);
+  }
+  const [assembledPizzas,setAssembledPizzas] = useState<mapToppings>()
+  const pizzaAssembler = (toppings:toppingData[],pizzas:pizzaData[],components:componentData[]) => {
+    // interface mapToppings{
+    //   [key: string]: string[]
+    // }
+    let mapToppings: mapToppings = {}
+    
+    // create map object of empty arrays
+    pizzas.map(pizza=>{mapToppings[pizza.pizza_id] = []})
+    
+    // map through component data,
+    //   find the topping element
+    //   push topping to mapToppings array
+    components.map(component=>{
+      const topping = toppings.find(topping => component.topping_id===topping.topping_id)
+      topping && component.pizza_id!=null ? mapToppings[component.pizza_id].push(topping) : null
+    })
+    return mapToppings
   }
 
   // const [toppings,setToppings] = useState<toppingData[]>(toppingsList)
@@ -37,6 +60,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   const [data,setData] = useState<propType>(props)
   useEffect(()=>{
     setData(props)
+    setAssembledPizzas(pizzaAssembler(props.toppings,props.pizzas,props.components))
   },[props])
 
   const handleButtonPress = async(user:string) => {
@@ -72,7 +96,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
         <UserComponent user='Chef' toppings={toppings} pizzas={pizzas} components={components} routerRefresh={refreshData}/>*/}
         
         <UserComponent user='Owner' toppings={data.toppings} refreshData={refreshData}/>
-        <UserComponent user='Chef' toppings={data.toppings} pizzas={data.pizzas} components={data.components} refreshData={refreshData}/>
+        <UserComponent user='Chef' toppings={data.toppings} pizzas={data.pizzas} components={data.components} refreshData={refreshData} assembledPizzas={assembledPizzas}/>
 
 {/*        <div>
           <ul>

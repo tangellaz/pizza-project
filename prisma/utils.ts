@@ -29,14 +29,14 @@ export const createDynamic = async(table:PrismaModelName,arr:ColAndVal[]) => {
   //@ts-ignore
   return await prisma[table].create({
     data: dataObj
-  }).then((result:any)=>console.log('result',result))
-  .catch((err:any)=>console.log(err))
+  }).then((result:any)=>result)
+  .catch((err:any)=>err)
 }
 
 // Create many dynamic for multi column
 // Note: createMany is not supported in sqlite
 export const createManyDynamic = (table:PrismaModelName,arr:ColAndVal[][]) => {
-  arr.map((dataArray)=>createDynamic(table,dataArray))
+  arr.map(async(dataArray)=>await createDynamic(table,dataArray))
 }
 
 // // Find records
