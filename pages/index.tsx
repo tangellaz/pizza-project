@@ -16,22 +16,28 @@ import {
 } from '../prisma/utils'
 
 
-export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  console.log('props',props)
   const router = useRouter()
   const refreshData = () => {
     router.replace(router.asPath);
   }
 
-  const [toppings,setToppings] = useState<toppingData[]>(toppingsList)
-  const [pizzas,setPizzas] = useState<pizzaData[]>(pizzasList)
-  const [components,setComponents] = useState<componentData[]>(componentsList)
+  // const [toppings,setToppings] = useState<toppingData[]>(toppingsList)
+  // const [pizzas,setPizzas] = useState<pizzaData[]>(pizzasList)
+  // const [components,setComponents] = useState<componentData[]>(componentsList)
+  // useEffect(()=>{
+  //   setToppings(toppingsList)
+  //   setPizzas(pizzasList)
+  //   setComponents(componentsList)
+  //   console.log("useEffect",{toppings:toppings,pizzas:pizzas,components:components})
+  // },[toppingsList,pizzasList,componentsList])
 
+  const [data,setData] = useState<propType>(props)
   useEffect(()=>{
-    setToppings(toppingsList)
-    setPizzas(pizzasList)
-    setComponents(componentsList)
-    console.log("useEffect",{toppings:toppings,pizzas:pizzas,components:components})
-  },[toppingsList,pizzasList,componentsList])
+    setData(props)
+  },[props])
 
   const handleButtonPress = async(user:string) => {
     try {
@@ -62,8 +68,11 @@ export default function Home({toppingsList,pizzasList,componentsList}: InferGetS
 {/*        <UserComponent user='Owner' initialToppings={toppingsList} routerRefresh={refreshData}/>
         <UserComponent user='Chef' initialToppings={toppingsList} initialPizzas={pizzasList} initialComponents={componentsList} routerRefresh={refreshData}/>
 */}
-        <UserComponent user='Owner' toppings={toppings} routerRefresh={refreshData}/>
-        <UserComponent user='Chef' toppings={toppings} pizzas={pizzas} components={components} routerRefresh={refreshData}/>
+{/*        <UserComponent user='Owner' toppings={toppings} routerRefresh={refreshData}/>
+        <UserComponent user='Chef' toppings={toppings} pizzas={pizzas} components={components} routerRefresh={refreshData}/>*/}
+        
+        <UserComponent user='Owner' toppings={data.toppings} refreshData={refreshData}/>
+        <UserComponent user='Chef' toppings={data.toppings} pizzas={data.pizzas} components={data.components} refreshData={refreshData}/>
 
 {/*        <div>
           <ul>
@@ -88,11 +97,25 @@ export default function Home({toppingsList,pizzasList,componentsList}: InferGetS
 
 // import { PrismaClient } from '@prisma/client'
 
-// export const getServerSideProps: GetServerSideProps<{ data: any }> = async () => {
-export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],pizzasList:pizzaData[],componentsList:componentData[]}> = async () => {
+type propType = {
+  toppings: toppingData[],
+  pizzas: pizzaData[],
+  components: componentData[],
+}
+export const getServerSideProps: GetServerSideProps<propType> = async () => {
+// export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],pizzasList:pizzaData[],componentsList:componentData[]}> = async () => {
+  // const data = await fetch('http://localhost:3000/api?user=chef').then(res=>res.json())
+  
+  // const data:propType = {toppings:[],pizzas:[], components:[]}
+  // console.log('SSR',data)
+  // data.toppings = await findAllDynamic('toppings')
+  // data.pizzas = await findAllDynamic('pizzas')
+  // data.components = await findAllDynamic('pizza_components')
+
   const toppings = await findAllDynamic('toppings')
   const pizzas = await findAllDynamic('pizzas')
   const components = await findAllDynamic('pizza_components')
+
   // console.log({toppings:toppings,pizzas:pizzas,components:components})
 
   // const prisma = new PrismaClient()
@@ -100,11 +123,17 @@ export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],
   // const pizzas:pizzaData[] = await prisma.pizzas.findMany()
   // const components:componentData[] = await prisma.pizza_components.findMany()
 
+  // return {
+  //   props: {
+  //     toppingsList: toppings,
+  //     pizzasList: pizzas,
+  //     componentsList: components,
+  //   },
+  // }
+  // return {
+  //   props: data
+  // }
   return {
-    props: {
-      toppingsList: toppings,
-      pizzasList: pizzas,
-      componentsList: components,
-    },
+    props: {toppings:toppings,pizzas:pizzas, components:components}
   }
 }

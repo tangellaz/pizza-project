@@ -11,7 +11,9 @@ import {
 } from '../prisma/utils'
 
 import {
-  deleteTopping
+  deleteTopping,
+  deletePizza,
+
 } from '../src/api'
 
 type Props = {
@@ -19,13 +21,13 @@ type Props = {
   toppings: toppingData[],
   pizzas?: pizzaData[],
   components?: componentData[],
-  routerRefresh: () => void
+  refreshData: () => void
 }
 interface mapToppings {
   [key: string]: toppingData[]
 }
 
-const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[], routerRefresh}) => {
+const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[], refreshData}) => {
 
   const [assembledPizzas,setAssembledPizzas] = useState<mapToppings>()
 
@@ -33,7 +35,8 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>()
 
   const [editToppingId, setEditToppingId] = useState<number>(NaN)
-  const [topping,setTopping] = useState<toppingData>({topping_id: -999, topping_name:''})
+  // const [topping,setTopping] = useState<toppingData>({topping_id: -999, topping_name:''})
+  // const [editValue,setEditValue] = useState<string>('')
 
   const [showModal, setShowModal] = useState(false)
 
@@ -82,19 +85,22 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
     setToppingSelect(toppingsSelected)
     setShowModal(true)
   }
-  const deletePizza = async(pizzaToDelete: pizzaData) => {
-    console.log('DELETE',pizzaToDelete)
-    const data = pizzaToDelete
+  const deleterPizza = async(pizzaToDelete: pizzaData) => {
+    await deletePizza(pizzaToDelete)
+    refreshData()
 
-    const response = await fetch('/api?user=chef', {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
+    // console.log('DELETE',pizzaToDelete)
+    // const data = pizzaToDelete
+
+    // const response = await fetch('/api?user=chef', {
+    //   method: "DELETE",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(data),
+    // })
     
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
+    // if (!response.ok) {
+    //   throw new Error(response.statusText)
+    // }
   }
 
   // const editTopping = (toppingToEdit: toppingData) => {
@@ -102,8 +108,7 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
   // }
   const deleterTopping = async(toppingToDelete: toppingData) => {
     await deleteTopping(toppingToDelete)
-    routerRefresh()
-
+    refreshData()
 
   //   console.log('DELETE',toppingToDelete)
 
@@ -119,35 +124,14 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
   //     throw new Error(response.statusText)
   //   }
   }
-  const submitTopping = async(toppingToSubmit: toppingData, name:string) => {
-    console.log('topping from state:\n', name)
-    console.log(name)
-    console.log('POST',toppingToSubmit)
-    const data = {
-      topping_id: toppingToSubmit.topping_id,
-      topping_name: name
-    }
-    // if no change, do not post
-    if(name != '' && name != toppingToSubmit.topping_name){
-      const response = await fetch('/api?user=owner', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      
-      if (!response.ok) {
-        throw new Error(response.statusText)
-      }
-    }
-
-    setEditToppingId(NaN)
-  }
 
   // // handle state updates
   useEffect(()=>{
-    const pizzaList = pizzaAssembler(toppings,pizzas,components)
-    // console.log('pizzaList:',pizzaList)
-    setAssembledPizzas(pizzaList)
+    if (pizzas != []) {
+      const pizzaList = pizzaAssembler(toppings,pizzas,components)
+      // console.log('pizzaList:',pizzaList)
+      setAssembledPizzas(pizzaList)
+    }
   }
   ,[])
 
@@ -160,7 +144,7 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
         <>
           <ul className={styles.listEdit}>{pizzas.map((pizza:pizzaData)=>
               <li key={pizza.pizza_id}>
-                <ListItem editItem={()=>editPizza(pizza)} deleteItem={()=>deletePizza(pizza)} name={pizza.pizza_name} item={pizza}/>
+                <ListItem editItem={()=>editPizza(pizza)} deleteItem={()=>deleterPizza(pizza)} name={pizza.pizza_name} item={pizza}/>
                 <ul className={styles.listDisplay}>
                   {
                     assembledPizzas ? assembledPizzas[pizza.pizza_id].map((topping,i)=>
@@ -183,12 +167,12 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
             {topping.topping_id!=editToppingId?
               <ListItem editItem={()=>setEditToppingId(topping.topping_id)} deleteItem={()=>deleterTopping(topping)} name={topping.topping_name} item={topping}/>
               :
-              <EditTopping topping={topping} submitTopping={submitTopping} action='save'/>
+              <EditTopping topping={topping} action='save' setEditToppingId={setEditToppingId} refreshData={refreshData}/>
             }
           </li>
         )}
           <li>
-            <EditTopping topping={{topping_id:-999,topping_name:''}} submitTopping={submitTopping} action='add'/>
+            <EditTopping topping={{topping_id:-999,topping_name:''}} action='add' setEditToppingId={setEditToppingId} refreshData={refreshData}/>
           </li>
         </ul>
 

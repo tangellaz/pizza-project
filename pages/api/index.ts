@@ -79,7 +79,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
       } else if (user === 'owner') {
         // INSERT INTO toppings (topping_name)
         // VALUES ([variable name]);
-
+        createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
         // console.log(createManyDynamic('toppings',[[{col_name:'topping_name',value:'pepperoni'}],[{col_name:'topping_name',value:'sausage'}]]))
       } else null
 
@@ -135,27 +135,25 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
           (prisma DELETE MANY)  
           DELETE FROM pizzas WHERE pizza_id = [pizza id];  
         */
-        printData()
 
         // get array of pizza ids
         const pizzaIds = await findManyDynamic("pizza_components",{col_name:'topping_id', value: data.topping_id},{col_name:'pizza_id', value: true})
         // pizzaIds = [ { pizza_id: 1 }, { pizza_id: 2 }, { pizza_id: 3 } ]
-        console.log('pizzaIds Results:\n',pizzaIds)
-        
+        // console.log('pizzaIds Results:\n',pizzaIds)
+
         // convert to list
         const pizzaIdsList = pizzaIds.map((pizza:{pizza_id: number})=>pizza.pizza_id)
-        console.log('pizzaIdsList Results:\n',pizzaIdsList)
+        // console.log('pizzaIdsList Results:\n',pizzaIdsList)
 
-        const result1 = await deleteManyDynamic("pizzas",{col_name:"pizza_id",value: {in: pizzaIdsList}})
-        // const result1 = await deleteManyDynamic("pizza_components",{col_name:"pizza_id",value: {in: pizzaIdsList}})
-        console.log('Deleted from pizzas:\n',result1)
+        await deleteManyDynamic("pizzas",{col_name:"pizza_id",value: {in: pizzaIdsList}})
+        // console.log('Deleted from pizzas:\n',result1)
 
-        const result2 = await deleteDynamic('toppings', {col_name:'topping_id',value: data.topping_id})
-        console.log('Deleted from toppings:\n',result2)
+        await deleteDynamic('toppings', {col_name:'topping_id',value: data.topping_id})
+        // console.log('Deleted from toppings:\n',result2)
 
-        printData()
       } else null
-      // throw new Error('Random error') //Test Error handling
+
+      // throw new Error('Random error') //Error testing
       res.status(200).json([])
     } catch (error) {
       // console.log(error);

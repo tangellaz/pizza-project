@@ -6,7 +6,6 @@ import styles from './Modal.module.css';
 import { 
   toppingData,
   pizzaData,
-  componentData,
 } from '../prisma/utils'
 
 type modalInputs = {
