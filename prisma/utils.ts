@@ -13,7 +13,7 @@ export type PrismaModelName = IgnorePrismaBuiltins<keyof PrismaClient>;
 
 export interface ColAndVal {
   col_name:string;
-  value:string|number;
+  value:string|number|boolean|object;
 }
 
 export type toppingData = {"topping_id":number;"topping_name":string}
@@ -44,11 +44,23 @@ export const createManyDynamic = (table:PrismaModelName,arr:ColAndVal[][]) => {
 // // console.log(prisma)
 // console.log(toppings)
 
-export const findManyDynamic = async(table:PrismaModelName) => {
+export const findAllDynamic = async(table:PrismaModelName) => {
   //@ts-ignore
   return await prisma[table].findMany()
   .then((result:any)=>result)
-  .catch((err:any)=>console.log(err))
+  .catch((err:any)=>err)
+}
+
+export const findManyDynamic = async(table:PrismaModelName,where:ColAndVal,select?:ColAndVal) => {
+  const criteria = select?
+  { select: {[select.col_name]: select.value},
+    where: {[where.col_name]: where.value}}
+  :
+  {where: {[where.col_name]: where.value}}
+  //@ts-ignore
+  return await prisma[table].findMany(criteria)
+  .then((result:any)=>result)
+  .catch((err:any)=>err)
 }
 
 // // Update record by unique field
@@ -93,8 +105,8 @@ export const deleteDynamic = async(table:PrismaModelName,where:ColAndVal) => {
     where: {
       [where.col_name]: where.value 
     }
-  }).then((result:any)=>console.log('deleted',result))
-  .catch((err:any)=>console.log(err))
+  }).then((result:any)=>result)
+  .catch((err:any)=>err)
 }
 
 // // Delete records
@@ -104,6 +116,6 @@ export const deleteManyDynamic = async(table:PrismaModelName,where:ColAndVal) =>
     where: {
       [where.col_name]: where.value 
     }
-  }).then((result:any)=>console.log('deleted',result))
-  .catch((err:any)=>console.log(err))
+  }).then((result:any)=>result)
+  .catch((err:any)=>err)
 }

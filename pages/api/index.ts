@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 import {
+  findAllDynamic,
   findManyDynamic,
   createDynamic,
   createManyDynamic,
@@ -33,15 +34,20 @@ import {
 //   .catch((err:any)=>console.log(err))
 // }
 
+const printData = async() => {
+  console.log("pizzas:\n",await findAllDynamic("pizzas"))
+  console.log("toppings:\n",await findAllDynamic("toppings"))
+  console.log("pizza_components:\n",await findAllDynamic("pizza_components"))
+}
 
 export default async function handle(req :NextApiRequest, res :NextApiResponse) {
   if (req.method === 'GET') {
     try{
       const {user} = req.query
       // const toppingsList = await prisma.toppings.findMany()
-      const toppingsList = await findManyDynamic('toppings')
-      const pizzasList = user==='chef' ? await findManyDynamic('pizzas') : []
-      const pizzaComponents = user==='chef' ? await findManyDynamic('pizza_components') : []
+      const toppingsList = await findAllDynamic('toppings')
+      const pizzasList = user==='chef' ? await findAllDynamic('pizzas') : []
+      const pizzaComponents = user==='chef' ? await findAllDynamic('pizza_components') : []
 
       res.status(200).json({toppings:toppingsList,pizzas:pizzasList,components:pizzaComponents})
     } catch (error) {
@@ -54,6 +60,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
     try{
       const {user} = req.query
       const data = req.body
+      console.log('POST')
       console.log(data)
       if (user === 'chef') {
         // INSERT INTO pizzas (pizza_name)
@@ -87,6 +94,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
     try{
       const {user} = req.query
       const data = req.body
+      console.log('PUT')
       console.log(data)
       if (user === 'chef') {
         /*
@@ -102,7 +110,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
         */
       } else null
 
-      res.status(204).json({})
+      res.status(200).json([])
     } catch (error) {
       // console.log(error);
       res.status(403).json({ error: "Error occured." });
@@ -113,26 +121,46 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
     try{
       const {user} = req.query
       const data = req.body
+      console.log('DELETE')
       console.log(data)
       if (user === 'chef') {
         /*
           DELETE FROM pizzas WHERE pizza_id = [pizza id];
         */
+        const result = await deleteDynamic('pizzas', {col_name:'pizza_id',value: data.pizza_id})
       } else if (user === 'owner') {
         /*
-          if pizzas, grab pizza ids with topping to delete. Delete pizza ids.
+          if pizzas with topping, grab pizza ids with topping to delete. Delete pizza ids.
           DELETE FROM toppings WHERE topping_name = [variable name];
           (prisma DELETE MANY)  
           DELETE FROM pizzas WHERE pizza_id = [pizza id];  
         */
-      } else null
+        printData()
 
-      res.status(204).json()
+        // get array of pizza ids
+        const pizzaIds = await findManyDynamic("pizza_components",{col_name:'topping_id', value: data.topping_id},{col_name:'pizza_id', value: true})
+        // pizzaIds = [ { pizza_id: 1 }, { pizza_id: 2 }, { pizza_id: 3 } ]
+        console.log('pizzaIds Results:\n',pizzaIds)
+        
+        // convert to list
+        const pizzaIdsList = pizzaIds.map((pizza:{pizza_id: number})=>pizza.pizza_id)
+        console.log('pizzaIdsList Results:\n',pizzaIdsList)
+
+        const result1 = await deleteManyDynamic("pizzas",{col_name:"pizza_id",value: {in: pizzaIdsList}})
+        // const result1 = await deleteManyDynamic("pizza_components",{col_name:"pizza_id",value: {in: pizzaIdsList}})
+        console.log('Deleted from pizzas:\n',result1)
+
+        const result2 = await deleteDynamic('toppings', {col_name:'topping_id',value: data.topping_id})
+        console.log('Deleted from toppings:\n',result2)
+
+        printData()
+      } else null
+      // throw new Error('Random error') //Test Error handling
+      res.status(200).json([])
     } catch (error) {
       // console.log(error);
       res.status(403).json({ error: "Error occured." });
     }
   }
-
 
 }

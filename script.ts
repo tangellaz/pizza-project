@@ -64,7 +64,7 @@ async function main() {
   // Create many dynamic for multi column
   // Note: createMany is not supported in sqlite
   const createManyDynamic = (table:PrismaModelName,arr:ColAndVal[][]) => {
-    arr.map((dataArray)=>createDynamic(table,dataArray))
+    arr.map(async(dataArray)=> await createDynamic(table,dataArray))
   }
 
   // // Find records
@@ -72,12 +72,23 @@ async function main() {
   // // console.log(prisma)
   // console.log(toppings)
 
-  const findManyDynamic = async(table:PrismaModelName) => {
-    //@ts-ignore
-    return await prisma[table].findMany()
-    .then((result:any)=>console.log('result',result))
-    .catch((err:any)=>console.log(err))
-  }
+const findAllDynamic = async(table:PrismaModelName) => {
+  //@ts-ignore
+  return await prisma[table].findMany()
+  .then((result:any)=>result)
+  .catch((err:any)=>err)
+}
+
+const findManyDynamic = async(table:PrismaModelName,where:ColAndVal) => {
+  //@ts-ignore
+  return await prisma[table].findMany({
+    where: {
+      [where.col_name]: where.value
+    }
+  })
+  .then((result:any)=>result)
+  .catch((err:any)=>err)
+}
 
   // // Update record by unique field
   const updateDynamic = async(table:PrismaModelName,where:ColAndVal,data:ColAndVal) => {
@@ -136,27 +147,28 @@ async function main() {
     .catch((err:any)=>console.log(err))
   }
 
-  // console.log(createDynamic('toppings',[{col_name:'topping_id',value:3},{col_name:'topping_name',value:'sausage'}]))
-  // console.log(createDynamic('toppings',[{col_name:'topping_name',value:'pepperoni'}]))
-  // console.log(createManyDynamic('toppings',[[{col_name:'topping_name',value:'pepperoni'}],[{col_name:'topping_name',value:'sausage'}]]))
+  // console.log(await createDynamic('toppings',[{col_name:'topping_id',value:3},{col_name:'topping_name',value:'sausage'}]))
+  // console.log(await createDynamic('toppings',[{col_name:'topping_id',value:2},{col_name:'topping_name',value:'cheese'}]))
+  // console.log(await createDynamic('toppings',[{col_name:'topping_name',value:'pepperoni'}]))
+  // console.log(await createManyDynamic('toppings',[[{col_name:'topping_name',value:'pepperoni'}],[{col_name:'topping_name',value:'sausage'}]]))
 
-  // console.log(updateDynamic('toppings',{col_name:'topping_id',value:8},{col_name:'topping_name',value:'pepperoni2'}))
+  // console.log(await updateDynamic('toppings',{col_name:'topping_id',value:8},{col_name:'topping_name',value:'pepperoni2'}))
 
-  // console.log(deleteDynamic('toppings',{col_name:'topping_id',value:4}))
-  // console.log(deleteManyDynamic('toppings',{col_name:'topping_name',value:'cheese'}))
-  // console.log(deleteManyDynamic('toppings',{col_name:'topping_name',value:'sausage'}))
-  // console.log(deleteManyDynamic('toppings',{col_name:'topping_name',value:'pepperoni2'}))
+  // console.log(await deleteDynamic('toppings',{col_name:'topping_id',value:4}))
+  // console.log(await deleteManyDynamic('toppings',{col_name:'topping_name',value:'cheese'}))
+  // console.log(await deleteManyDynamic('toppings',{col_name:'topping_name',value:'sausage'}))
+  // console.log(await deleteManyDynamic('toppings',{col_name:'topping_name',value:'pepperoni2'}))
 
-  console.log(findManyDynamic('toppings'))
+  console.log(await findAllDynamic('toppings'))
 
-  // console.log(createManyDynamic('pizzas',[[{col_name:'pizza_name',value:'pepperoni'}],[{col_name:'pizza_name',value:'cheese'}],[{col_name:'pizza_name',value:'meat lover'}]]))
-  // console.log(updateDynamic('pizzas',{col_name:'pizza_id',value:1},{col_name:'pizza_name',value:'pepperoni'}))
-  // console.log(updateDynamic('pizzas',{col_name:'pizza_id',value:2},{col_name:'pizza_name',value:'cheese'}))
-  // console.log(updateDynamic('pizzas',{col_name:'pizza_id',value:3},{col_name:'pizza_name',value:'meat lover'}))
-  console.log(findManyDynamic('pizzas'))
+  // console.log(await createManyDynamic('pizzas',[[{col_name:'pizza_name',value:'pepperoni'}],[{col_name:'pizza_name',value:'cheese'}],[{col_name:'pizza_name',value:'meat lover'}]]))
+  // console.log(await updateDynamic('pizzas',{col_name:'pizza_id',value:1},{col_name:'pizza_name',value:'pepperoni'}))
+  // console.log(await updateDynamic('pizzas',{col_name:'pizza_id',value:2},{col_name:'pizza_name',value:'cheese'}))
+  // console.log(await updateDynamic('pizzas',{col_name:'pizza_id',value:3},{col_name:'pizza_name',value:'meat lover'}))
+  console.log(await findAllDynamic('pizzas'))
 
   // console.log(
-  //   createManyDynamic('pizza_components',[
+  //   await createManyDynamic('pizza_components',[
   //     [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:1}],
   //     [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:2}],
   //     [{col_name:'pizza_id',value:2},{col_name:'topping_id',value:2}],
@@ -166,7 +178,7 @@ async function main() {
   //     ]
   //   )
   // )
-  console.log(findManyDynamic('pizza_components'))
+  console.log(await findAllDynamic('pizza_components'))
 }
 
 

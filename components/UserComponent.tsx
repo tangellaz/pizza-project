@@ -10,20 +10,22 @@ import {
   componentData,
 } from '../prisma/utils'
 
+import {
+  deleteTopping
+} from '../src/api'
+
 type Props = {
   user: string,
-  initialToppings: toppingData[],
-  initialPizzas?: pizzaData[],
-  initialComponents?: componentData[],
+  toppings: toppingData[],
+  pizzas?: pizzaData[],
+  components?: componentData[],
+  routerRefresh: () => void
 }
 interface mapToppings {
   [key: string]: toppingData[]
 }
 
-const UserComponent: React.FC<Props> = ({user, initialToppings, initialPizzas=[], initialComponents=[]}) => {
-  const [toppings,setToppings] = useState(initialToppings)
-  const [pizzas,setPizzas] = useState(initialPizzas)
-  const [components,setComponents] = useState(initialComponents)
+const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[], routerRefresh}) => {
 
   const [assembledPizzas,setAssembledPizzas] = useState<mapToppings>()
 
@@ -34,7 +36,7 @@ const UserComponent: React.FC<Props> = ({user, initialToppings, initialPizzas=[]
   const [topping,setTopping] = useState<toppingData>({topping_id: -999, topping_name:''})
 
   const [showModal, setShowModal] = useState(false)
-  
+
   // const pizzaAssembler = (toppings:toppingData[],pizzas:pizzaData[],components:componentData[]) => {
   //   const assembledPizzasList = pizzas.map( (pizza:pizzaData) => {
   //     // pizza_components: Filter toppings per pizza by pizza_id
@@ -95,22 +97,27 @@ const UserComponent: React.FC<Props> = ({user, initialToppings, initialPizzas=[]
     }
   }
 
-  const editTopping = (toppingToEdit: toppingData) => {
-    setEditToppingId(toppingToEdit.topping_id)
-  }
-  const deleteTopping = async(toppingToDelete: toppingData) => {
-    console.log('DELETE',toppingToDelete)
-    const data = toppingToDelete
+  // const editTopping = (toppingToEdit: toppingData) => {
+  //   setEditToppingId(toppingToEdit.topping_id)
+  // }
+  const deleterTopping = async(toppingToDelete: toppingData) => {
+    await deleteTopping(toppingToDelete)
+    routerRefresh()
 
-    const response = await fetch('/api?user=owner', {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
+
+  //   console.log('DELETE',toppingToDelete)
+
+  //   const data = toppingToDelete
+
+  //   const response = await fetch('/api?user=owner', {
+  //     method: "DELETE",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(data),
+  //   })
     
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
+  //   if (!response.ok) {
+  //     throw new Error(response.statusText)
+  //   }
   }
   const submitTopping = async(toppingToSubmit: toppingData, name:string) => {
     console.log('topping from state:\n', name)
@@ -118,7 +125,7 @@ const UserComponent: React.FC<Props> = ({user, initialToppings, initialPizzas=[]
     console.log('POST',toppingToSubmit)
     const data = {
       topping_id: toppingToSubmit.topping_id,
-      topping_name: topping
+      topping_name: name
     }
     // if no change, do not post
     if(name != '' && name != toppingToSubmit.topping_name){
@@ -144,11 +151,6 @@ const UserComponent: React.FC<Props> = ({user, initialToppings, initialPizzas=[]
   }
   ,[])
 
-  // useEffect(()=>{
-  //   console.log('inputRef useEffect',topping)
-  //   submitTopping(topping)
-  // },[topping])
-
   return (
   <div className={styles.container}>
     <p>{user} component</p>
@@ -173,13 +175,13 @@ const UserComponent: React.FC<Props> = ({user, initialToppings, initialPizzas=[]
               </li>
             )}
           </ul>
-          <button onClick={()=>editPizza({pizza_id:-999,pizza_name:''})}>Create new pizza</button>
+          <button className={styles.createPizzaBtn} onClick={()=>editPizza({pizza_id:-999,pizza_name:''})}>Create new pizza</button>
         </>
       :
         <ul className={styles.listEdit}>{toppings.map((topping:toppingData)=>
           <li key={topping.topping_id}>
             {topping.topping_id!=editToppingId?
-              <ListItem editItem={()=>editTopping(topping)} deleteItem={()=>deleteTopping(topping)} name={topping.topping_name} item={topping}/>
+              <ListItem editItem={()=>setEditToppingId(topping.topping_id)} deleteItem={()=>deleterTopping(topping)} name={topping.topping_name} item={topping}/>
               :
               <EditTopping topping={topping} submitTopping={submitTopping} action='save'/>
             }

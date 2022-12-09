@@ -1,11 +1,15 @@
 .listEdit {
   min-width: 288px;
   max-width: min(100%,300px);
-  margin-bottom: calc(var(--gap)/2);
 }
 
 .listEdit > li {
-  margin: calc(var(--gap)) 0;
+  padding-top: var(--gap);
+  transition: var(--transition);
+}
+
+.listEdit > li:hover {
+  background: rgba(255,255,255,0.05);
 }
 
 .listEdit > li:after {
@@ -16,7 +20,6 @@
     height: 1px;
     background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
     margin-top: var(--gap);
-/*    background: var(--pseudoBorderColor1a);*/
 }
 
 .listDisplay {
@@ -27,8 +30,6 @@
   display: inline;
   font-size: 1rem;
 }
-
-
 
 .actionBtn {
   height: fit-content;
@@ -60,4 +61,9 @@
 }
 .editContainer > button {
   margin:auto;
+}
+
+.createPizzaBtn {
+  display: block;
+  margin: auto;
 }

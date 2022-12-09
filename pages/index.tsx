@@ -1,9 +1,11 @@
 import Head from 'next/head'
+import React, {useState, useEffect} from 'react'
+import {useRouter} from 'next/router'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { GetServerSideProps } from 'next'
 import { InferGetServerSidePropsType } from 'next'
-import {findManyDynamic} from '../prisma/utils';
+import {findAllDynamic} from '../prisma/utils';
 import UserComponent from '../components/UserComponent';
 import Footer from '../components/Footer';
 
@@ -15,7 +17,22 @@ import {
 
 
 export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  
+  const router = useRouter()
+  const refreshData = () => {
+    router.replace(router.asPath);
+  }
+
+  const [toppings,setToppings] = useState<toppingData[]>(toppingsList)
+  const [pizzas,setPizzas] = useState<pizzaData[]>(pizzasList)
+  const [components,setComponents] = useState<componentData[]>(componentsList)
+
+  useEffect(()=>{
+    setToppings(toppingsList)
+    setPizzas(pizzasList)
+    setComponents(componentsList)
+    console.log("useEffect",{toppings:toppings,pizzas:pizzas,components:components})
+  },[toppingsList,pizzasList,componentsList])
+
   const handleButtonPress = async(user:string) => {
     try {
       const res = await fetch(`/api?user=${user}`, {
@@ -42,8 +59,11 @@ export default function Home({toppingsList,pizzasList,componentsList}: InferGetS
         <h1 className={styles.title}>
           It's Pizza Time
         </h1>
-        <UserComponent user='Owner' initialToppings={toppingsList}/>
-        <UserComponent user='Chef' initialToppings={toppingsList} initialPizzas={pizzasList} initialComponents={componentsList}/>
+{/*        <UserComponent user='Owner' initialToppings={toppingsList} routerRefresh={refreshData}/>
+        <UserComponent user='Chef' initialToppings={toppingsList} initialPizzas={pizzasList} initialComponents={componentsList} routerRefresh={refreshData}/>
+*/}
+        <UserComponent user='Owner' toppings={toppings} routerRefresh={refreshData}/>
+        <UserComponent user='Chef' toppings={toppings} pizzas={pizzas} components={components} routerRefresh={refreshData}/>
 
 {/*        <div>
           <ul>
@@ -70,9 +90,11 @@ export default function Home({toppingsList,pizzasList,componentsList}: InferGetS
 
 // export const getServerSideProps: GetServerSideProps<{ data: any }> = async () => {
 export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],pizzasList:pizzaData[],componentsList:componentData[]}> = async () => {
-  const toppings = await findManyDynamic('toppings')
-  const pizzas = await findManyDynamic('pizzas')
-  const components = await findManyDynamic('pizza_components')
+  const toppings = await findAllDynamic('toppings')
+  const pizzas = await findAllDynamic('pizzas')
+  const components = await findAllDynamic('pizza_components')
+  // console.log({toppings:toppings,pizzas:pizzas,components:components})
+
   // const prisma = new PrismaClient()
   // const toppings:toppingData[] = await prisma.toppings.findMany()
   // const pizzas:pizzaData[] = await prisma.pizzas.findMany()
