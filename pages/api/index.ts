@@ -94,7 +94,13 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
       } else if (user === 'owner') {
         // INSERT INTO toppings (topping_name)
         // VALUES ([variable name]);
-        createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
+        if(data.topping_id===-999){
+          createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
+        } else {
+          // update where topping_id === topping_id
+          console.log("data.topping_name",data.topping_name)
+          updateDynamic('toppings',{col_name:'topping_id',value:data.topping_id},{col_name:'topping_name',value:data.topping_name})
+        }
         // console.log(createManyDynamic('toppings',[[{col_name:'topping_name',value:'pepperoni'}],[{col_name:'topping_name',value:'sausage'}]]))
       } else null
 
