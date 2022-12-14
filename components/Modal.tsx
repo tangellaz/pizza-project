@@ -12,27 +12,28 @@ import {submitPizza} from '../src/api'
 
 type modalInputs = {
   show: boolean,
-  onClose: ()=>void,
+  closeModal: () => void,
   selectedPizza?: pizzaData,
   selectedToppings?: toppingData[],
   availableToppings?: toppingData[],
   refreshData: () => void,
 }
 
-const Modal = ({show, onClose, selectedPizza, selectedToppings, availableToppings, refreshData}:modalInputs) => {
-
+const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableToppings, refreshData}:modalInputs) => {
+  const [error,setError] = useState<string>('');
   const [isBrowser,setIsBrowser] = useState(false);
-  const [reviews,setReviews] = useState([]);
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const handleCloseClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
-    onClose();
+    closeModal();
+    setError('');
   }
 
  const overlayClickHandler = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (overlayRef.current==e.target) {
-      onClose();
+      closeModal();
+      setError('');
     }
   }
 
@@ -66,8 +67,16 @@ const Modal = ({show, onClose, selectedPizza, selectedToppings, availableTopping
       }
     }
 
-    await submitPizza(data)
-    refreshData()
+    // Error handling
+    if (!data.pizza.pizza_name) {
+      setError('Pizzas must have a name')
+    } else if (data.toppings.length === 0) {
+      setError('Pizzas must have toppings')
+    } else {
+      await submitPizza(data)
+      closeModal()
+      refreshData()
+    }
   }
 
   const [pizza,setPizza] = useState<string>('')
@@ -90,29 +99,29 @@ const Modal = ({show, onClose, selectedPizza, selectedToppings, availableTopping
   if (isBrowser) {
     return ReactDOM.createPortal(
       show?
-
         <div className={styles.overlay} ref={overlayRef} onClick={(e)=>overlayClickHandler(e)}>
           <div className={styles.card}>
             <button onClick={(e)=>handleCloseClick(e)} aria-label="close pop-up" title="close pop-up button">
-              <img src="/exit.svg" decoding="async" width="16" height="16" alt=""/>
+              <img src="/exit.svg" decoding="async" width="24" height="24" alt=""/>
             </button>
 
             <form id="update-form" onSubmit={handleSubmit}>
             
-            <label htmlFor={selectedPizza?.pizza_name}>
-              Pizza name:
-            </label>
-            <br/>
-            <input type="text" 
-              id={selectedPizza?.pizza_name}
-              name={selectedPizza?.pizza_id.toString()}
-              defaultValue={selectedPizza?.pizza_name}
-              onChange={event => setPizza(event.target.value)}/>
+              <label htmlFor={selectedPizza?.pizza_name}>
+                Pizza name:
+              </label>
+              <input className={styles.nameInput} type="text" 
+                id={selectedPizza?.pizza_name}
+                name={selectedPizza?.pizza_id.toString()}
+                defaultValue={selectedPizza?.pizza_name}
+                onChange={event => setPizza(event.target.value)}/>
+              {error?<p className={styles.error}>Error: {error}</p>:null}
               <fieldset>
-                <legend>Select from the available toppings:</legend>
+                <legend>Select from available toppings:</legend>
                 {
                   availableToppings?.map((topping)=>
-                    <div key={topping.topping_name}>
+                    <div className={styles.selection} key={topping.topping_name}>
+                      <label htmlFor={topping.topping_name}>
                       <input type="checkbox" 
                       defaultChecked={selectedToppings?.some(ele=>
                         ele.topping_id===topping.topping_id)}
@@ -120,8 +129,7 @@ const Modal = ({show, onClose, selectedPizza, selectedToppings, availableTopping
                       key={topping.topping_name+topping.topping_id}
                       id={topping.topping_name}
                       value={topping.topping_id}/>
-                      <label htmlFor={topping.topping_name}>
-                        {topping.topping_name}
+                        <span>{topping.topping_name}</span>
                       </label>
                       <br/>
                     </div>

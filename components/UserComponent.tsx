@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import Modal from './Modal'
+import LoadingModal from './LoadingModal'
 import ListItem from './ListItem'
 import EditTopping from './EditTopping'
 import styles from './UserComponent.module.css'
@@ -7,13 +8,11 @@ import styles from './UserComponent.module.css'
 import { 
   toppingData,
   pizzaData,
-  componentData,
 } from '../prisma/utils'
 
 import {
   deleteTopping,
   deletePizza,
-
 } from '../src/api'
 
 interface mapToppings {
@@ -23,12 +22,12 @@ type Props = {
   user: string,
   toppings: toppingData[],
   pizzas?: pizzaData[],
-  components?: componentData[],
-  refreshData: () => void
-  assembledPizzas: mapToppings
+  refreshData: () => void,
+  assembledPizzas?: mapToppings,
+  loading: boolean
 }
 
-const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[], refreshData, assembledPizzas}) => {
+const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], refreshData, assembledPizzas, loading}) => {
 
   const [pizzaSelect, setPizzaSelect] = useState<pizzaData>()
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>()
@@ -37,56 +36,54 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
 
   const [showModal, setShowModal] = useState(false)
 
-  const editPizza = (pizzaToEdit: pizzaData) => {
+  const handleEditPizza = (pizzaToEdit: pizzaData) => {
     const toppingsSelected = assembledPizzas?assembledPizzas[pizzaToEdit.pizza_id]:[]
 
     setPizzaSelect(pizzaToEdit)
     setToppingSelect(toppingsSelected)
     setShowModal(true)
   }
-  const deleterPizza = async(pizzaToDelete: pizzaData) => {
+  const handleDeletePizza = async(pizzaToDelete: pizzaData) => {
     await deletePizza(pizzaToDelete)
     refreshData()
   }
-  const deleterTopping = async(toppingToDelete: toppingData) => {
+  const handleDeleteTopping = async(toppingToDelete: toppingData) => {
     await deleteTopping(toppingToDelete)
     refreshData()
   }
 
   return (
   <div className={styles.container}>
-    <p>{user} component</p>
+    <h3>User: {user}</h3>
 
     {
       user.toLowerCase()==='chef' ?
         <>
           <ul className={styles.listEdit}>{pizzas.map((pizza:pizzaData)=>
               <li key={pizza.pizza_id}>
-                <ListItem editItem={()=>editPizza(pizza)} deleteItem={()=>deleterPizza(pizza)} name={pizza.pizza_name} item={pizza}/>
+                <ListItem editItem={()=>handleEditPizza(pizza)} deleteItem={()=>handleDeletePizza(pizza)} name={pizza.pizza_name} item={pizza}/>
                 <ul className={styles.listDisplay}>
-                  {console.log('assembledPizzas[pizza.pizza_id]',assembledPizzas?assembledPizzas[pizza.pizza_id]:null)}
-                  {
-                    assembledPizzas ? assembledPizzas[pizza.pizza_id].map((topping,i)=>
-                      <li key={pizza.pizza_id+topping.topping_id}>
-                        {topping.topping_name}
-                        {i!=assembledPizzas[pizza.pizza_id].length-1?', ':''}
-                      </li>
-                    )
-                    :null
+                  {assembledPizzas 
+                    ? assembledPizzas[pizza.pizza_id].map((topping,i)=>
+                        <li key={pizza.pizza_id+topping.topping_id}>
+                          {topping.topping_name}
+                          {i!=assembledPizzas[pizza.pizza_id].length-1 ? ', ' : '' }
+                        </li>
+                      )
+                    : null
                   }
                 </ul>
               </li>
             )}
           </ul>
-          <button className={styles.createPizzaBtn} onClick={()=>editPizza({pizza_id:-999,pizza_name:''})}>Create new pizza</button>
+          <button className={styles.createPizzaBtn} onClick={()=>handleEditPizza({pizza_id:-999,pizza_name:''})}>Create new pizza</button>
         </>
       :
         <ul className={styles.listEdit}>{toppings.map((topping:toppingData)=>
           <li key={topping.topping_id}>
-            {topping.topping_id!=editToppingId?
-              <ListItem editItem={()=>setEditToppingId(topping.topping_id)} deleteItem={()=>deleterTopping(topping)} name={topping.topping_name} item={topping}/>
-              :
-              <EditTopping topping={topping} action='save' setEditToppingId={setEditToppingId} refreshData={refreshData}/>
+            {topping.topping_id!=editToppingId
+              ? <ListItem editItem={()=>setEditToppingId(topping.topping_id)} deleteItem={()=>handleDeleteTopping(topping)} name={topping.topping_name} item={topping}/>
+              : <EditTopping topping={topping} action='save' setEditToppingId={setEditToppingId} refreshData={refreshData}/>
             }
           </li>
         )}
@@ -96,8 +93,8 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], components=[
         </ul>
 
     }
-    <Modal onClose={()=>setShowModal(false)} show={showModal} selectedPizza={pizzaSelect} selectedToppings={toppingSelect} availableToppings={toppings} refreshData={refreshData}/>
-    {/*<button onClick={()=>setShowModal(true)}>Click to Show Modal</button>*/}
+    <LoadingModal show={loading}/>
+    <Modal closeModal={()=>setShowModal(false)} show={showModal} selectedPizza={pizzaSelect} selectedToppings={toppingSelect} availableToppings={toppings} refreshData={refreshData}/>
   </div>
   )
 }

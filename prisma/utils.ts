@@ -1,5 +1,13 @@
 import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
+
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ['query'],
+  })
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 type IgnorePrismaBuiltins<S extends string> = string extends S
   ? string
@@ -51,12 +59,12 @@ export const findAllDynamic = async(table:PrismaModelName) => {
   .catch((err:any)=>err)
 }
 
-export const findManyDynamic = async(table:PrismaModelName,where:ColAndVal,select?:ColAndVal) => {
+export const findManyDynamic = async(table:PrismaModelName,where?:ColAndVal,select?:ColAndVal) => {
   const criteria = select?
   { select: {[select.col_name]: select.value},
-    where: {[where.col_name]: where.value}}
+    where: where?{[where.col_name]: where.value}:{}}
   :
-  {where: {[where.col_name]: where.value}}
+  {where: where?{[where.col_name]: where.value}:{}}
   //@ts-ignore
   return await prisma[table].findMany(criteria)
   .then((result:any)=>result)
@@ -116,6 +124,16 @@ export const deleteManyDynamic = async(table:PrismaModelName,where:ColAndVal) =>
     where: {
       [where.col_name]: where.value 
     }
+  }).then((result:any)=>result)
+  .catch((err:any)=>err)
+}
+
+// // Delete records
+export const deleteManyDynamica = async(table:PrismaModelName,whereCriteria:ColAndVal[]) => {
+  const dataObj = whereCriteria.reduce((accumObj,currObj) => Object.assign(accumObj,{[currObj.col_name]: currObj.value}),{})
+  //@ts-ignore
+  return await prisma[table].deleteMany({
+    where: dataObj
   }).then((result:any)=>result)
   .catch((err:any)=>err)
 }

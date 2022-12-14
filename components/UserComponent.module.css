@@ -4,7 +4,7 @@
 }
 
 .listEdit > li {
-  padding-top: var(--gap);
+  padding: var(--gap) calc(var(--gap)/2) 0 calc(var(--gap)/2);
   transition: var(--transition);
 }
 
@@ -23,6 +23,7 @@
 }
 
 .listDisplay {
+  width: calc(300px - var(--gap)*2);
   margin-left: calc(var(--gap));
   margin-bottom: calc(var(--gap));
 }

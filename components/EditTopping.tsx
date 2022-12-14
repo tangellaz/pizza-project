@@ -12,26 +12,35 @@ type EditToppingInputs = {
 
 const EditTopping = ({topping,action,setEditToppingId,refreshData}:EditToppingInputs) => {
   const [value,setValue] = useState<string>('')
+  const [btnAction,setBtnAction] = useState<string>(action)
   useEffect(()=>{
     topping.topping_name!=''?setValue(topping.topping_name):null
   },[])
+  useEffect(()=>{
+    // if (value is not changed and not blank) OR (value is blank and not a new entry)
+    if((value===topping?.topping_name&&value!='')||(value===''&&topping?.topping_id!=-999)) {
+      setBtnAction('cancel')
+    } else {
+      setBtnAction(action)
+    }
+  },[value])
 
   const handleSubmit = async(toppingToSubmit: toppingData, name:string) => {
     // console.log('topping from state:\n', name)
     // console.log('POST',toppingToSubmit)
-    // if no change, do not post
+
+    // if no change or blank, do not post
     if(name != '' && name != toppingToSubmit.topping_name){
       const data = {
         topping_id: toppingToSubmit.topping_id,
         topping_name: name
       }
-      submitTopping(data)
-
-      // clean up
-      setEditToppingId(NaN)
-      setValue('')
+      await submitTopping(data)
       refreshData()
     }
+    // clean up
+    setValue('')
+    setEditToppingId(NaN)
   }
 
   return(
@@ -46,8 +55,9 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData}:EditToppingIn
         />
       <button className={styles.actionBtn}
       onClick={()=>{handleSubmit(topping,value?value:topping?.topping_name)}}
-      aria-label={action} title={action}>
-        <img src={`/${action}.svg`} decoding="async" width="24" height="24" alt={action}/>
+      aria-label={btnAction} title={btnAction}>{
+        <img src={btnAction==='cancel'?`/exit.svg`:`/${action}.svg`} decoding="async" width="24" height="24" alt={btnAction}/>
+      }
       </button>
     </div>
   )

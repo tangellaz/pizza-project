@@ -1,6 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
 
 import {
   toppingData,
@@ -14,29 +12,9 @@ import {
   updateDynamic,
   updateManyDynamic,
   deleteDynamic,
-  deleteManyDynamic
+  deleteManyDynamic,
+  deleteManyDynamica
 } from '../../prisma/utils';
-
-// type IgnorePrismaBuiltins<S extends string> = string extends S
-//   ? string
-//   : S extends ''
-//   ? S
-//   : S extends `$${infer T}`
-//   ? never
-//   : S;
-
-// export type PrismaModelName = IgnorePrismaBuiltins<keyof PrismaClient>;
-
-// export interface ColAndVal {
-//   col_name:string;
-//   value:string|number;
-// }
-// export const findManyDynamic = async(table:PrismaModelName) => {
-//   //@ts-ignore
-//   return await prisma[table].findMany()
-//   .then((result:any)=>result)
-//   .catch((err:any)=>console.log(err))
-// }
 
 const printData = async() => {
   console.log("pizzas:\n",await findAllDynamic("pizzas"))
@@ -55,7 +33,6 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
       res.status(200).json({toppings:toppingsList,pizzas:pizzasList,components:pizzaComponents})
     } catch (error) {
-      // console.log(error);
       res.status(403).json({ error: "Error occured." });
     }
   }
@@ -67,28 +44,71 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
       console.log('POST')
       console.log(data)
       if (user === 'chef') {
-        // INSERT INTO pizzas (pizza_name)
-        // VALUES ([variable name]);
-        // INSERT INTO pizza_components (pizza_id,topping_id)
-        // VALUES ([variable id],[variable id]);
+        /*
+          INSERT INTO pizzas (pizza_name)
+          VALUES ([variable name]);
+          INSERT INTO pizza_components (pizza_id,topping_id)
+          VALUES ([variable id],[variable id]);
 
-        // createDynamic('pizzas',[{col_name:'pizza_name',value:'pepperoni'}])
-        // createManyDynamic('pizza_components',[
-          //     [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:1}],
-          //     [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:2}],
-          //     [{col_name:'pizza_id',value:2},{col_name:'topping_id',value:2}],
-          //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:1}],
-          //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:2}],
-          //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:3}]
+          createDynamic('pizzas',[{col_name:'pizza_name',value:'pepperoni'}])
+        */
 
-        const pizza:pizzaData = await createDynamic('pizzas',[{col_name:'pizza_name',value:data.pizza.pizza_name}])
-        console.log('pizza',pizza)
-        data.toppings.map(async(topping:toppingData)=>
-          await createDynamic('pizza_components',[
-            {col_name:'pizza_id',value:pizza.pizza_id},
-            {col_name:'topping_id',value:topping.topping_id}
-          ])
-        )
+        // if new pizza, add pizza and toppings
+        if(data.pizza.pizza_id===-999){
+          const pizza:pizzaData = await createDynamic('pizzas',[{col_name:'pizza_name',value:data.pizza.pizza_name}])
+          console.log('pizza',pizza)
+          data.toppings.map(async(topping:toppingData)=>
+            await createDynamic('pizza_components',[
+              {col_name:'pizza_id',value:pizza.pizza_id},
+              {col_name:'topping_id',value:topping.topping_id}
+            ])
+          )
+        } else {
+          // update where pizza_id === pizza_id
+          await updateDynamic('pizzas',{col_name:'pizza_id',value:data.pizza.pizza_id},{col_name:'pizza_name',value:data.pizza.pizza_name})
+          
+          // // UPDATE toppings
+          // // get topping records for pizza
+          // const prevToppingIds = await findManyDynamic("pizza_components",{col_name:'pizza_id', value: data.pizza.pizza_id},{col_name:'topping_id', value: true})
+          
+          // // map through all records
+          // const allToppingIds = await findManyDynamic("toppings",undefined,{col_name:'topping_id', value: true})
+          // allToppingIds.map(async(topping:{topping_id: number})=>{
+          //   const prev = prevToppingIds.find(({topping_id}:{topping_id:number})=> topping_id === topping.topping_id) 
+          //   const update = data.toppings.find(({topping_id}:{topping_id:number})=> topping_id === topping.topping_id)
+          //   console.log({prev:prev,update:update})
+          //   // if topping in updated and not prev, create new record
+          //   // if topping not in updated but in prev, delete
+          //   // if topping in updated and prev, do nothing
+          //   if(!prev && update) {
+          //     await createDynamic('pizza_components',[{col_name:'pizza_id',value:data.pizza.pizza_id},{col_name:'topping_id',value:update.topping_id}])
+          //   } else if (!update && prev) {
+          //     await deleteManyDynamica('pizza_components',[{col_name:'pizza_id',value:data.pizza.pizza_id},{col_name:'topping_id',value:prev.topping_id}])
+          //   } else null
+          // })
+
+          // Second Approach (minimize queries on db)
+          console.log('data.pizza.pizza_id',data.pizza.pizza_id)
+          console.log('typeof data.pizza.pizza_id',typeof data.pizza.pizza_id)
+          const deleted = await deleteManyDynamic('pizza_components',{col_name:'pizza_id',value: data.pizza.pizza_id})
+          console.log('deleted',deleted)
+          data.toppings.map(async(topping:toppingData)=>
+            await createDynamic('pizza_components',[
+              {col_name:'pizza_id',value:data.pizza.pizza_id},
+              {col_name:'topping_id',value:topping.topping_id}
+            ])
+          )
+
+          
+
+
+          // data.toppings.map(async(topping:toppingData)=>
+          //   await createDynamic('pizza_components',[
+          //     {col_name:'pizza_id',value:pizza.pizza_id},
+          //     {col_name:'topping_id',value:topping.topping_id}
+          //   ])
+          // )
+        }
         printData()
 
       } else if (user === 'owner') {
@@ -106,7 +126,6 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
       res.status(201).json({})
     } catch (error) {
-      // console.log(error);
       res.status(403).json({ error: "Error occured." });
     }
   }
@@ -133,7 +152,6 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
       res.status(200).json([])
     } catch (error) {
-      // console.log(error);
       res.status(403).json({ error: "Error occured." });
     }
   }
@@ -177,7 +195,6 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
       // throw new Error('Random error') //Error testing
       res.status(200).json([])
     } catch (error) {
-      // console.log(error);
       res.status(403).json({ error: "Error occured." });
     }
   }

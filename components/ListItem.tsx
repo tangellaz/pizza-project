@@ -7,8 +7,8 @@ import {
 } from '../prisma/utils'
 
 type ListItemInputs = {
-  editItem: Function, 
-  deleteItem: Function, 
+  editItem: () => void,
+  deleteItem: () => void,
   name:string, 
   item:pizzaData|toppingData
 }

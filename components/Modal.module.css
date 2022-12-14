@@ -15,50 +15,43 @@
 .card {
   background: rgba(0,0,0,1);
   border-radius: 0.75rem;
-  box-shadow: 0px 0px 4px 4px rgb(255,255,255,0.25);
+  box-shadow: var(--box-shadow);
   padding: var(--gap);
   margin: auto;
   display: flex;
   flex-direction: column;
   text-align: center;
-  min-width: 304px;
+  min-width: 288px;
   max-width: 500px;
 }
 
 .card > button:first-of-type {
-  display:flex;
+  height: fit-content;
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 2.25rem;
-  width: 2.25rem;
+  padding: 0.25rem 0.25rem;
   margin-left: auto;
-/*  margin-bottom: var(--gap);*/
-  background: rgba(0,0,0,1);
-  border-radius: 100%;
-  box-shadow: var(--box-shadow);
-  padding: 0.5rem;
+
 }
 .card > button:last-of-type {
   width: fit-content;
+  margin: auto;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .card > button:hover {
-    /*opacity: 0.75;*/
-/*    background: rgba(255,255,255,0.15);*/
     box-shadow: var(--btnShadowHover);
   }
 }
 
 .card > button:active {
-  /*opacity: 0.75;*/
-/*  background: rgba(255,255,255,0.15);*/
   box-shadow: var(--btnShadowHover);
 }
 
 .card > button > img {
-  width: 1rem;
-  height: 1rem;
   z-index: 20;
   filter: invert(100%);
 }
@@ -72,52 +65,43 @@
   filter: var(--svg-filter);
 }
 
-.card > h3 {
-  margin-bottom: var(--gap);
-}
-.card > p:first-of-type {
-  text-align: left;
-}
-
-.review {
-  padding: calc(var(--gap)/2);
+.nameInput {
   margin-top: calc(var(--gap)/2);
-  border-radius: 0.75rem;
-  background: var(--photoCardBackground);
+  margin-bottom: calc(var(--gap));
 }
-.review > h4 {
+.card > form > fieldset {
+  text-align: left;
+  border: none;
+  width: fit-content;
+  padding: 0px;
+  margin: var(--gap) auto;
+}
+.card > form > fieldset > legend {
   margin-bottom: calc(var(--gap)/2);
 }
-.review > p {
-  text-align: left;
-  font-size: clamp(0.75rem, 0.64rem + 0.57vw, 1rem);
+
+.selection {
+  margin-left: 1rem;
+  margin-bottom: calc(var(--gap)/2);
+  display:flex;
+  align-items: center;
 }
-.review > a {
-  border: none;
+
+.selection > label {
+  cursor: pointer;
+  width: 100%;
+  display:block;
+  padding: calc(var(--gap)/4) 0;
 }
-@media (hover: hover) and (pointer: fine) {
-  .review > a:hover {
-    border: none;
-  }
+.selection > label > input {
+  cursor: pointer;
+  margin: 0;
 }
-.review > a:active {
-  border: none;
+.selection > label > span {
+  padding-left: calc(var(--gap)/2);
 }
-.review > a > button {
-  font-size: clamp(0.75rem, 0.64rem + 0.57vw, 1rem);
-  font-weight: 400;
-  color: var(--linkColor);
-  background: none;
-  border: none;
-  box-shadow: none;
-  text-transform: lowercase;
-  padding-top: calc(var(--gap)/4);
-}
-@media (hover: hover) and (pointer: fine) {
-  .review > a > button:hover {
-    text-decoration: underline;
-  }
-}
-.review > a > button:active {
-  text-decoration: underline;
+
+.error {
+  margin-top: 0;
+  color: red;
 }

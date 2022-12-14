@@ -178,6 +178,7 @@ const findManyDynamic = async(table:PrismaModelName,where:ColAndVal) => {
   //     ]
   //   )
   // )
+  console.log(await deleteManyDynamic('pizza_components',{col_name:'pizza_id',value:26}))
   console.log(await findAllDynamic('pizza_components'))
 }
 
