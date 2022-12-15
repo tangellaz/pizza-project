@@ -1,50 +1,89 @@
 import React, {useState,useEffect} from 'react'
 import styles from './EditTopping.module.css'
 import {toppingData} from '../prisma/utils'
-import {submitTopping} from '../src/api'
+import {handleRequest} from '../lib/api'
+import {
+  toppingExists,
+  isAlphaNumeric,
+} from '../lib/utils'
 
 type EditToppingInputs = {
-  topping:toppingData
+  topping: toppingData
   action: 'save'|'add',
-  setEditToppingId: React.Dispatch<React.SetStateAction<number>>
-  refreshData: () => void
+  setEditToppingId: React.Dispatch<React.SetStateAction<number>>,
+  refreshData: () => void,
+  toppings: toppingData[], //error handling
 }
 
-const EditTopping = ({topping,action,setEditToppingId,refreshData}:EditToppingInputs) => {
-  const [value,setValue] = useState<string>('')
+const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:EditToppingInputs) => {
+  const [value,setValue] = useState<string>(topping.topping_name)
   const [btnAction,setBtnAction] = useState<string>(action)
+  const [error,setError] = useState<string>('');
+
   useEffect(()=>{
     topping.topping_name!=''?setValue(topping.topping_name):null
   },[])
+
   useEffect(()=>{
     // if (value is not changed and not blank) OR (value is blank and not a new entry)
-    if((value===topping?.topping_name&&value!='')||(value===''&&topping?.topping_id!=-999)) {
+    // if((value===topping?.topping_name&&value!='')||(value===''&&topping?.topping_id!=-999)) {
+    if(value===topping?.topping_name&&value!='') {
       setBtnAction('cancel')
+      setError('')
+    } else if (value===''&&topping?.topping_id!=-999) {
+      setBtnAction('cancel')
+      setError('Topping must have a name')
+    } else if (!isAlphaNumeric(value)) {
+      setBtnAction('cancel')
+      setError('Topping name can only contain alphanumerics')
     } else {
       setBtnAction(action)
+      setError('')
     }
   },[value])
 
   const handleSubmit = async(toppingToSubmit: toppingData, name:string) => {
-    // console.log('topping from state:\n', name)
-    // console.log('POST',toppingToSubmit)
-
-    // if no change or blank, do not post
-    if(name != '' && name != toppingToSubmit.topping_name){
+    
+    if(btnAction === 'cancel') {
+      setBtnAction(action)
+      setError('')
+      setValue('')
+      setEditToppingId(NaN)
+    } else if (name === '') {
+      setError('Topping must have a name')
+      setBtnAction('cancel')
+    } else if (toppingExists(toppings,toppingToSubmit,name)){
+      setError('Topping already exists')
+      setBtnAction('cancel')
+    } else {
       const data = {
         topping_id: toppingToSubmit.topping_id,
         topping_name: name
       }
-      await submitTopping(data)
+      await handleRequest('owner','POST',data)
+      setError('')
+      setValue('')
+      setEditToppingId(NaN)
       refreshData()
     }
-    // clean up
-    setValue('')
-    setEditToppingId(NaN)
+    // // if no change or blank, do not post
+    // if(name != '' && name != toppingToSubmit.topping_name){
+    //   const data = {
+    //     topping_id: toppingToSubmit.topping_id,
+    //     topping_name: name
+    //   }
+    //   await handleRequest('owner','POST',toppingToSubmit)
+    //   setError('')
+    //   refreshData()
+    // }
+    // // clean up
+    // setValue('')
+    // setEditToppingId(NaN)
   }
 
   return(
-    <div className={styles.container}>
+    <div>
+      <div className={styles.container}>
         <input type="text" 
           id={topping?.topping_name}
           name={topping?.topping_id.toString()}
@@ -53,12 +92,14 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData}:EditToppingIn
           onChange={(e)=>setValue(e.target.value)}
           onKeyPress={(e)=>{e.key === 'Enter'?handleSubmit(topping,value?value:topping?.topping_name):null}}
         />
-      <button className={styles.actionBtn}
-      onClick={()=>{handleSubmit(topping,value?value:topping?.topping_name)}}
-      aria-label={btnAction} title={btnAction}>{
-        <img src={btnAction==='cancel'?`/exit.svg`:`/${action}.svg`} decoding="async" width="24" height="24" alt={btnAction}/>
-      }
-      </button>
+        <button className={styles.actionBtn}
+        onClick={()=>{handleSubmit(topping,value?value:topping?.topping_name)}}
+        aria-label={btnAction} title={btnAction}>{
+          <img src={btnAction==='cancel'?`/exit.svg`:`/${action}.svg`} decoding="async" width="24" height="24" alt={btnAction}/>
+        }
+        </button>
+      </div>
+      {error?<p className={styles.error}><span>Error:</span><span>{error}</span></p>:null}
     </div>
   )
 }

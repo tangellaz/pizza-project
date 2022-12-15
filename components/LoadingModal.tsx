@@ -1,15 +1,7 @@
 import React, {useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Triangle } from 'react-loader-spinner'
-
 import styles from './LoadingModal.module.css';
-
-import { 
-  toppingData,
-  pizzaData,
-} from '../prisma/utils'
-
-import {submitPizza} from '../src/api'
 
 const LoadingModal = ({show}:{show:boolean}) => {
 

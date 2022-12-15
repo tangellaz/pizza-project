@@ -11,14 +11,9 @@ import {
   componentData,
 } from '../prisma/utils'
 
-import {
-  deleteTopping,
-  deletePizza,
-} from '../src/api'
+import {handleRequest} from '../lib/api'
+import {mapToppings} from '../lib/utils'
 
-interface mapToppings {
-  [key: string]: toppingData[]
-}
 type chefInputs = {
   toppings: toppingData[],
   pizzas?: pizzaData[],
@@ -29,7 +24,7 @@ type chefInputs = {
 
 const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loading}:chefInputs) => {
 
-  const [pizzaSelect, setPizzaSelect] = useState<pizzaData>()
+  const [pizzaSelect, setPizzaSelect] = useState<pizzaData>({pizza_id:-999,pizza_name:''})
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>()
 
   const [editToppingId, setEditToppingId] = useState<number>(NaN)
@@ -43,7 +38,8 @@ const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loadi
     setShowModal(true)
   }
   const handleDeletePizza = async(pizzaToDelete: pizzaData) => {
-    await deletePizza(pizzaToDelete)
+    // await deletePizza(pizzaToDelete)
+    await handleRequest('chef','DELETE',pizzaToDelete)
     refreshData()
   }
 
@@ -55,8 +51,8 @@ const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loadi
           <li key={pizza.pizza_id}>
             <ListItem editItem={()=>handleEditPizza(pizza)} deleteItem={()=>handleDeletePizza(pizza)} name={pizza.pizza_name} item={pizza}/>
             <ul className={styles.listDisplay}>
-              {assembledPizzas 
-                ? assembledPizzas[pizza.pizza_id].map((topping,i)=>
+              {assembledPizzas ?
+                assembledPizzas[pizza.pizza_id].map((topping,i)=>
                     <li key={pizza.pizza_id+topping.topping_id}>
                       {topping.topping_name}
                       {i!=assembledPizzas[pizza.pizza_id].length-1 ? ', ' : '' }
@@ -71,7 +67,7 @@ const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loadi
       <button className={styles.createPizzaBtn} onClick={()=>handleEditPizza({pizza_id:-999,pizza_name:''})}>Create new pizza</button>
       
       <LoadingModal show={loading}/>
-      <Modal closeModal={()=>setShowModal(false)} show={showModal} selectedPizza={pizzaSelect} selectedToppings={toppingSelect} availableToppings={toppings} refreshData={refreshData}/>
+      <Modal closeModal={()=>setShowModal(false)} show={showModal} selectedPizza={pizzaSelect} selectedToppings={toppingSelect} availableToppings={toppings} refreshData={refreshData} pizzas={pizzas} assembledPizzas={assembledPizzas}/>
     </div>
   )
 }

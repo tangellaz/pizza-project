@@ -13,11 +13,10 @@ import {
 import {
   deleteTopping,
   deletePizza,
-} from '../src/api'
+} from '../lib/api'
 
-interface mapToppings {
-  [key: string]: toppingData[]
-}
+import {mapToppings} from '../lib/utils'
+
 type Props = {
   user: string,
   toppings: toppingData[],
@@ -29,7 +28,7 @@ type Props = {
 
 const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], refreshData, assembledPizzas, loading}) => {
 
-  const [pizzaSelect, setPizzaSelect] = useState<pizzaData>()
+  const [pizzaSelect, setPizzaSelect] = useState<pizzaData>({pizza_id:-999,pizza_name:''})
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>()
 
   const [editToppingId, setEditToppingId] = useState<number>(NaN)
@@ -63,8 +62,8 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], refreshData,
               <li key={pizza.pizza_id}>
                 <ListItem editItem={()=>handleEditPizza(pizza)} deleteItem={()=>handleDeletePizza(pizza)} name={pizza.pizza_name} item={pizza}/>
                 <ul className={styles.listDisplay}>
-                  {assembledPizzas 
-                    ? assembledPizzas[pizza.pizza_id].map((topping,i)=>
+                  {assembledPizzas ?
+                    assembledPizzas[pizza.pizza_id].map((topping,i)=>
                         <li key={pizza.pizza_id+topping.topping_id}>
                           {topping.topping_name}
                           {i!=assembledPizzas[pizza.pizza_id].length-1 ? ', ' : '' }
@@ -81,20 +80,20 @@ const UserComponent: React.FC<Props> = ({user, toppings, pizzas=[], refreshData,
       :
         <ul className={styles.listEdit}>{toppings.map((topping:toppingData)=>
           <li key={topping.topping_id}>
-            {topping.topping_id!=editToppingId
-              ? <ListItem editItem={()=>setEditToppingId(topping.topping_id)} deleteItem={()=>handleDeleteTopping(topping)} name={topping.topping_name} item={topping}/>
-              : <EditTopping topping={topping} action='save' setEditToppingId={setEditToppingId} refreshData={refreshData}/>
+            {topping.topping_id!=editToppingId ?
+              <ListItem editItem={()=>setEditToppingId(topping.topping_id)} deleteItem={()=>handleDeleteTopping(topping)} name={topping.topping_name} item={topping}/>
+              : <EditTopping topping={topping} action='save' setEditToppingId={setEditToppingId} refreshData={refreshData} toppings={toppings}/>
             }
           </li>
         )}
           <li>
-            <EditTopping topping={{topping_id:-999,topping_name:''}} action='add' setEditToppingId={setEditToppingId} refreshData={refreshData}/>
+            <EditTopping topping={{topping_id:-999,topping_name:''}} action='add' setEditToppingId={setEditToppingId} refreshData={refreshData} toppings={toppings}/>
           </li>
         </ul>
 
     }
     <LoadingModal show={loading}/>
-    <Modal closeModal={()=>setShowModal(false)} show={showModal} selectedPizza={pizzaSelect} selectedToppings={toppingSelect} availableToppings={toppings} refreshData={refreshData}/>
+    <Modal closeModal={()=>setShowModal(false)} show={showModal} selectedPizza={pizzaSelect} selectedToppings={toppingSelect} availableToppings={toppings} refreshData={refreshData} pizzas={pizzas} assembledPizzas={assembledPizzas}/>
   </div>
   )
 }

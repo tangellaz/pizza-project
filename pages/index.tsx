@@ -17,13 +17,16 @@ import {
   componentData,
 } from '../prisma/utils'
 
-interface mapToppings {
-  [key: string]: toppingData[]
-}
+import {
+  propType,
+  mapToppings,
+  pizzaAssembler,
+} from '../lib/utils'
 
 // export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function Home(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // console.log('props',props)
+
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const refreshData = () => {
@@ -32,37 +35,11 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   }
 
   const [assembledPizzas,setAssembledPizzas] = useState<mapToppings>()
-  const pizzaAssembler = (toppings:toppingData[],pizzas:pizzaData[],components:componentData[]) => {
-    let mapToppings: mapToppings = {}
-    
-    // create map object of empty arrays
-    pizzas.map(pizza=>{mapToppings[pizza.pizza_id] = []})
-    
-    // map through component data,
-    //   find the topping element
-    //   push topping to mapToppings array
-    components.map(component=>{
-      const topping = toppings.find(topping => component.topping_id===topping.topping_id)
-      topping && component.pizza_id!=null ? mapToppings[component.pizza_id].push(topping) : null
-    })
-    console.log('mapToppings',mapToppings)
-    return mapToppings
-  }
-
-  // const [toppings,setToppings] = useState<toppingData[]>(toppingsList)
-  // const [pizzas,setPizzas] = useState<pizzaData[]>(pizzasList)
-  // const [components,setComponents] = useState<componentData[]>(componentsList)
-  // useEffect(()=>{
-  //   setToppings(toppingsList)
-  //   setPizzas(pizzasList)
-  //   setComponents(componentsList)
-  //   console.log("useEffect",{toppings:toppings,pizzas:pizzas,components:components})
-  // },[toppingsList,pizzasList,componentsList])
-
   const [data,setData] = useState<propType>(props)
+
   useEffect(()=>{
     setData(props)
-    setAssembledPizzas(pizzaAssembler(props.toppings,props.pizzas,props.components))
+    setAssembledPizzas(pizzaAssembler({toppings:props.toppings,pizzas:props.pizzas,components:props.components}))
   },[props])
 
   return (
@@ -88,13 +65,6 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   )
 }
 
-// import { PrismaClient } from '@prisma/client'
-
-type propType = {
-  toppings: toppingData[],
-  pizzas: pizzaData[],
-  components: componentData[],
-}
 export const getServerSideProps: GetServerSideProps<propType> = async () => {
 // export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],pizzasList:pizzaData[],componentsList:componentData[]}> = async () => {
   // const data = await fetch('http://localhost:3000/api?user=chef').then(res=>res.json())

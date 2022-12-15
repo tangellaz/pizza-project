@@ -1,4 +1,5 @@
 .listEdit {
+  width: calc(300px - var(--gap));
   min-width: 288px;
   max-width: min(100%,300px);
 }

@@ -65,10 +65,22 @@
   filter: var(--svg-filter);
 }
 
-.nameInput {
-  margin-top: calc(var(--gap)/2);
-  margin-bottom: calc(var(--gap));
+.card > form {
+  width:fit-content;
+  margin: auto;
+  text-align: left;
 }
+.nameInputLabel {
+  display: block;
+  width: 266px;
+  margin: auto;
+}
+.nameInput {
+  margin: calc(var(--gap)/2) 0 calc(var(--gap)) var(--gap);
+/*  margin-top: calc(var(--gap)/2);
+  margin-bottom: calc(var(--gap));*/
+}
+
 .card > form > fieldset {
   text-align: left;
   border: none;
@@ -77,6 +89,7 @@
   margin: var(--gap) auto;
 }
 .card > form > fieldset > legend {
+  text-align: center;
   margin-bottom: calc(var(--gap)/2);
 }
 
@@ -92,7 +105,12 @@
   width: 100%;
   display:block;
   padding: calc(var(--gap)/4) 0;
+  transition: var(--transition);
 }
+.selection > label:hover {
+  background: rgba(255,255,255,0.05);
+}
+
 .selection > label > input {
   cursor: pointer;
   margin: 0;
@@ -104,4 +122,10 @@
 .error {
   margin-top: 0;
   color: red;
+  display: flex;
+  margin-bottom: var(--gap);
+  font-size: 1rem;
+}
+.error > span:nth-of-type(2) {
+  margin-left: calc(var(--gap)/2);
 }
