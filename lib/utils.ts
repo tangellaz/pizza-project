@@ -68,15 +68,16 @@ export const pizzaNameExists = (pizzas:pizzaData[], selectedPizza:pizzaData, piz
   return(checkPizza && checkPizza.pizza_id != selectedPizza.pizza_id ? true : false)
 }
 
-export const pizzaComboExists = (toppings:toppingData[],assembledPizzas?:mapToppings):boolean => {
+export const pizzaComboExists = (data:{pizza:pizzaData,toppings:toppingData[]},assembledPizzas?:mapToppings):boolean => {
   let existingPizza = false;
   // Typescript check if assembledPizzas exists
   if(assembledPizzas) {
     for (const [key, value] of Object.entries(assembledPizzas)) {
-      if (value.length === toppings.length) {
+      // if toppings ary same size and not the same pizzas
+      if (value.length === data.toppings.length && parseInt(key) != data.pizza.pizza_id) {
         let same = true
         for(let i=0; i<value.length; i++) {
-          if (!toppings.find(({topping_id})=>topping_id===value[i].topping_id)){
+          if (!data.toppings.find(({topping_id})=>topping_id===value[i].topping_id)){
             same=false
             i=value.length
           }
@@ -89,22 +90,52 @@ export const pizzaComboExists = (toppings:toppingData[],assembledPizzas?:mapTopp
 }
 
 export const titleCase = (str:string) => {
-  const splitStr = str.split(' ')
-  const fullTitle = splitStr.map((word)=>{
-    let title=word.split('')
-    title[0]=title[0].toUpperCase()
-    return title.join('')
-  })
-  return fullTitle.join(' ')
+  if(str) {
+    const splitStr = str.split(' ')
+
+    let spaceChar = false
+    let newStr:string[] = []
+
+    splitStr.forEach(word=>{
+      if (word.length===0 && !spaceChar) { //detect single space. Second space removed
+        spaceChar=true
+        newStr.push(word)
+      } else if (word.length>0) {
+        let title=word.trim().split('')
+        title[0]?title[0]=title[0].toUpperCase():null
+        newStr.push(title.join(''))
+        spaceChar=false
+      }
+    })
+    return newStr.join(' ')  
+  } else return str
 }
+
+export const purgeWhitespace = (str:string) => {
+  if(str) {
+    const splitStr = str.split(' ')
+    let newStr:string[] = []
+    splitStr.forEach(word => {
+      const trimWord = word.trim()
+      trimWord.length>0?newStr.push(trimWord):null
+    })
+    return newStr.join(' ')  
+  } else return str
+}
+
+export const allWhitespace = (str:string) =>
+  str.trim().length ? true : false
 
 export const isAlphaNumeric = (str:string) => {
   let code
   for (let i=0; i<str.length; i++) {
     code = str.charCodeAt(i);
-    if (!(code > 47 && code < 58) && // numeric (0-9)
+    if (!(code === 32) && // space (' ')
+        !(code > 47 && code < 58) && // numeric (0-9)
         !(code > 64 && code < 91) && // upper alpha (A-Z)
-        !(code > 96 && code < 123)) { // lower alpha (a-z)
+        !(code > 96 && code < 123)   // lower alpha (a-z)
+      ) 
+    { 
       return false;
     }
   }

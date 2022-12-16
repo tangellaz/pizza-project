@@ -17,7 +17,7 @@ const ListItem = ({editItem,deleteItem,name,item}:ListItemInputs) => {
   
   return(
     <div className={styles.container}>
-      {name}
+      <span>{name}</span>
 
       <button className={styles.actionBtn}
       onClick={()=>editItem()}

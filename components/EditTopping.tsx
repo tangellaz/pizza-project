@@ -4,6 +4,8 @@ import {toppingData} from '../prisma/utils'
 import {handleRequest} from '../lib/api'
 import {
   toppingExists,
+  titleCase,
+  purgeWhitespace,
   isAlphaNumeric,
 } from '../lib/utils'
 
@@ -58,7 +60,7 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:Edit
     } else {
       const data = {
         topping_id: toppingToSubmit.topping_id,
-        topping_name: name
+        topping_name: purgeWhitespace(name.toLowerCase())
       }
       await handleRequest('owner','POST',data)
       setError('')
@@ -88,12 +90,12 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:Edit
           id={topping?.topping_name}
           name={topping?.topping_id.toString()}
           // defaultValue={topping?.topping_name}
-          value={value}
+          value={titleCase(value)}
           onChange={(e)=>setValue(e.target.value)}
-          onKeyPress={(e)=>{e.key === 'Enter'?handleSubmit(topping,value?value:topping?.topping_name):null}}
+          onKeyPress={(e)=>{e.key === 'Enter'?handleSubmit(topping, value?value:topping?.topping_name):null}}
         />
         <button className={styles.actionBtn}
-        onClick={()=>{handleSubmit(topping,value?value:topping?.topping_name)}}
+        onClick={()=>{handleSubmit(topping, value?value:topping?.topping_name)}}
         aria-label={btnAction} title={btnAction}>{
           <img src={btnAction==='cancel'?`/exit.svg`:`/${action}.svg`} decoding="async" width="24" height="24" alt={btnAction}/>
         }

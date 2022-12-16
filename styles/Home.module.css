@@ -1,14 +1,99 @@
 .main {
+  position: relative;
   min-height: 100vh;
-  padding: 4rem 0;
+  max-width: 1000px;
+  padding: 0;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  margin: 0 auto;
+  padding-bottom: calc(var(--gap)*4.5);
 }
 
-@media (max-width: 600px) {
+.userSelectContainer {
+  width: fit-content;
+  font-size: clamp(1rem, 0.91rem + 0.45vw, 1.2rem);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: calc(var(--gap)/2);
+  margin-bottom: calc(var(--gap)*2);
+  box-shadow: var(--box-shadow);
+/*  border: 1px solid rgba(255,255,255,0);*/
+  border-radius: 0.75rem;
+  padding: 0 calc(var(--gap)/2);
+  transition: var(--transition);
+}
+.userSelectContainer:hover {
+  box-shadow: none;
+/*  border: 1px solid rgba(255,255,255,.25);*/
+}
+.userSelectContainer > select {
+  background: var(--dark);
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.userSelectContainer:hover > select {
+  background: rgba(255,255,255,0.25);
+}
+.userSelectContainer > select:focus {
+  box-shadow: none;
+}
+
+.userContainer {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap)*4.5);
+}
+.userContainer > span {
+    content: "";
+    height: 1px;
+    min-width: 320px;
+    width: 80vw;
+    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
+    margin: auto;
+}
+
+@media only screen and (min-width: 639px) {
+  .userSelectContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: calc(var(--gap)/4);
+    margin-top: calc(var(--gap)*2.5 + 67.2px/2 - 61px/2);
+    margin-right: calc(var(--gap));
+  }
+
+  .userContainer {
+    width: 100%;
+/*    padding: 0 var(--gap);*/
+    max-width: 800px;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: unset;
+  }
+  .userContainer > span {
+    content: "";
+    min-width: 0px;
+    height: auto;
+    width: 1px;
+    background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
+    margin: 0;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .userSelectContainer {
+    flex-direction: row;
+    align-items: center;
+    padding-top: 0;
+    margin-top: calc(var(--gap)*2.5 + 67.2px/2 - 35px/2);
+  }
 }
 
 @media (prefers-color-scheme: dark) {

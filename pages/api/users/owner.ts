@@ -29,7 +29,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
     case 'POST':
       try{
         const data = req.body
-
+        console.log(req.body)
         if(data.topping_id===-999){
           createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
         } else {

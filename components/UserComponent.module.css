@@ -1,7 +1,18 @@
+.container {
+  width: calc(320px - var(--gap)*2);
+  margin: 0 auto;
+}
+.container > h3 {
+  margin: 0 auto calc(var(--gap)/2) calc(var(--gap)/2);
+}
+.container > p {
+  margin: 0 auto calc(var(--gap)*2) calc(var(--gap)/2);
+  font-size: clamp(1rem, 0.91rem + 0.45vw, 1.2rem)
+}
+
 .listEdit {
-  width: calc(300px - var(--gap));
-  min-width: 288px;
-  max-width: min(100%,300px);
+  width: calc(320px - var(--gap)*2);
+  margin: auto;
 }
 
 .listEdit > li {
@@ -14,17 +25,32 @@
 }
 
 .listEdit > li:after {
-    content: "";
-    display: block;
-    width: calc(100% + var(--gap));
-    transform: translateX(calc(-1*var(--gap)/2));
-    height: 1px;
-    background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
-    margin-top: var(--gap);
+  content: "";
+  display: block;
+  width: calc(100% + var(--gap));
+  transform: translateX(calc(-1*var(--gap)/2));
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
+  margin-top: var(--gap);
+}
+.listEdit > li:last-of-type:after {
+  background: transparent;
+}
+
+.addTopping {
+  margin-bottom: var(--gap);
+}
+.listEdit > li:first-of-type:after {
+  background: transparent;
+}
+
+.emptyMessage{
+  margin: calc(var(--gap)*2) auto;
+  text-align: center;
 }
 
 .listDisplay {
-  width: calc(300px - var(--gap)*2);
+  width: calc(320px - var(--gap)*3);
   margin-left: calc(var(--gap));
   margin-bottom: calc(var(--gap));
 }
@@ -68,4 +94,15 @@
 .createPizzaBtn {
   display: block;
   margin: auto;
+  margin-top: calc(var(--gap)*3 - 3px);
+  margin-bottom: calc(var(--gap)*1.5 + 6px);
+}
+
+@media only screen and (min-width: 768px) {
+  .container {
+    width: calc(380px - var(--gap)*2);
+  }
+  .listEdit {
+    width: calc(380px - var(--gap)*2);
+  }
 }

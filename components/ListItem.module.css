@@ -2,7 +2,11 @@
   display: flex;
   align-items: center;
   width:100%;
-    margin-bottom: calc(var(--gap)/2);
+  margin-bottom: calc(var(--gap)/2);
+}
+
+.container > span {
+  margin-right: calc(var(--gap)/2);
 }
 
 .container > button:first-of-type {

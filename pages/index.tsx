@@ -36,6 +36,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
 
   const [assembledPizzas,setAssembledPizzas] = useState<mapToppings>()
   const [data,setData] = useState<propType>(props)
+  const [user,setUser] = useState<string>('')
 
   useEffect(()=>{
     setData(props)
@@ -54,10 +55,22 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
         <h1 className={styles.title}>
           It's Pizza Time
         </h1>
+
+        <div className={styles.userSelectContainer}>
+          <label htmlFor="user-select">User:</label>
+          <select id="user-select" name="user" onChange={(e)=>setUser(e.target.value.toLowerCase())}>
+            <option defaultValue="Select user" hidden>Select user</option>
+            {['Owner','Chef','Superuser'].map(user=><option key={user} value={user}>{user}</option>)}
+          </select>
+        </div>
+
         {/*<UserComponent user='Owner' toppings={data.toppings} refreshData={refreshData} loading={loading}/>*/}
         {/*<UserComponent user='Chef' toppings={data.toppings} pizzas={data.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>*/}
-        <OwnerComponent toppings={data.toppings} refreshData={refreshData} loading={loading}/>
-        <ChefComponent toppings={data.toppings} pizzas={data.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>
+        <div className={styles.userContainer}>
+          {user==='owner'||user==='superuser'?<OwnerComponent toppings={data.toppings} refreshData={refreshData} loading={loading}/>:null}
+          {user==='superuser'?<span></span>:null}
+          {user==='chef'||user==='superuser'?<ChefComponent toppings={data.toppings} pizzas={data.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>:null}
+        </div>
       </main>
       <Footer/>
       <div id="modal-root"></div>

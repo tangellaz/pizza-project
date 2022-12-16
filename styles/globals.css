@@ -63,16 +63,19 @@ h6 {
 h1 {
   font-family:  'Open Sans', serif;
   font-size: clamp(2.5rem, 2.05rem + 2.27vw, 3.5rem);
+  margin: 2.5rem 0;
 }
 
 h2 {
   font-family:  'Open Sans', serif;
   font-size: clamp(2rem, 1.55rem + 2.27vw, 3rem);
+  margin: 2.25rem 0;
 }
 
 h3 {
   font-family:  'Open Sans', serif;
   font-size: clamp(1.25rem, 0.8rem + 2.27vw, 2.25rem);
+  margin: 2rem 0;
 }
 
 h4 {
@@ -164,3 +167,16 @@ input[type='submit']:focus {
     background: black;
   }
 }
+
+
+/*@media only screen and (min-width: 768px) {
+  :root {
+    --gap: 1.25rem
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  :root {
+    --gap: 1.5rem
+  }
+}*/

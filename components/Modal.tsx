@@ -12,6 +12,8 @@ import {
   mapToppings,
   pizzaNameExists,
   pizzaComboExists,
+  titleCase,
+  purgeWhitespace,
   isAlphaNumeric,
 } from '../lib/utils'
 
@@ -82,7 +84,7 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
               cheese 2
           */
           if(Number.isFinite(parseInt(key))) {
-            data.pizza = {pizza_id: parseInt(key), pizza_name: value.toString().toLowerCase()}
+            data.pizza = {pizza_id: parseInt(key), pizza_name: purgeWhitespace(value.toString().toLowerCase())}
           } else {
             data.toppings.push({topping_id: parseInt(value.toString()), topping_name: key.toLowerCase()})
           }
@@ -93,10 +95,11 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
         setError('Pizzas must have a name')
       } else if (data.toppings.length === 0) {
         setError('Pizzas must have toppings')
-      } else if (pizzaComboExists(data.toppings,assembledPizzas)) {
+      } else if (pizzaComboExists(data,assembledPizzas)) {
         setError('Pizza already exists with selected toppings')
       } else {
         await handleRequest('chef','POST',data)
+        setError('')
         closeModal()
         refreshData()
       }
@@ -133,7 +136,8 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
                 className={styles.nameInput}
                 id={selectedPizza?.pizza_name}
                 name={selectedPizza?.pizza_id.toString()}
-                defaultValue={selectedPizza?.pizza_name}
+                defaultValue={titleCase(selectedPizza?.pizza_name)}
+                value={titleCase(pizza)}
                 onChange={event => setPizza(event.target.value)}/>
               </label>
               {error?<p className={styles.error}><span>Error:</span><span>{error}</span></p>:null}
@@ -150,7 +154,7 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
                           key={topping.topping_name+topping.topping_id}
                           id={topping.topping_name}
                           value={topping.topping_id}/>
-                        <span>{topping.topping_name}</span>
+                        <span>{titleCase(topping.topping_name)}</span>
                       </label>
                     </div>
                   )

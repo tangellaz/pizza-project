@@ -72,13 +72,12 @@
 }
 .nameInputLabel {
   display: block;
-  width: 266px;
+  width: 212px;
   margin: auto;
 }
 .nameInput {
-  margin: calc(var(--gap)/2) 0 calc(var(--gap)) var(--gap);
-/*  margin-top: calc(var(--gap)/2);
-  margin-bottom: calc(var(--gap));*/
+  margin-top: calc(var(--gap)/2);
+  margin-bottom: calc(var(--gap));
 }
 
 .card > form > fieldset {
@@ -104,7 +103,8 @@
   cursor: pointer;
   width: 100%;
   display:block;
-  padding: calc(var(--gap)/4) 0;
+  padding: 0;
+  padding-bottom: calc(var(--gap)/4);
   transition: var(--transition);
 }
 .selection > label:hover {
