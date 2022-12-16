@@ -6,7 +6,6 @@ import styles from '../styles/Home.module.css'
 import { GetServerSideProps } from 'next'
 import { InferGetServerSidePropsType } from 'next'
 import {findAllDynamic} from '../prisma/utils';
-import UserComponent from '../components/UserComponent';
 import ChefComponent from '../components/ChefComponent';
 import OwnerComponent from '../components/OwnerComponent';
 import Footer from '../components/Footer';
@@ -53,7 +52,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          It's Pizza Time
+          It&apos;s Pizza Time
         </h1>
 
         <div className={styles.userSelectContainer}>
