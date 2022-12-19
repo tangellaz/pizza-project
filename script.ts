@@ -13,7 +13,7 @@ type IgnorePrismaBuiltins<S extends string> = string extends S
 
 export type PrismaModelName = IgnorePrismaBuiltins<keyof PrismaClient>;
 
-interface ColAndVal {
+type ColAndVal = {
   col_name:string;
   value:string|number;
 }
@@ -61,11 +61,23 @@ async function main() {
     .catch((err:any)=>console.log(err))
   }
 
-  // Create many dynamic for multi column
-  // Note: createMany is not supported in sqlite
-  const createManyDynamic = (table:PrismaModelName,arr:ColAndVal[][]) => {
-    arr.map(async(dataArray)=> await createDynamic(table,dataArray))
+  // // Create many dynamic for multi column
+  // // Note: createMany is not supported in sqlite
+  // const createManyDynamic = (table:PrismaModelName,arr:ColAndVal[][]) => {
+  //   arr.map(async(dataArray)=> await createDynamic(table,dataArray))
+  // }
+  const createManyDynamic = async(table:PrismaModelName,arr:ColAndVal[][]) => {
+    let dataObj: {[key: string]: string|number}[] = []
+    arr.map((entry)=>{
+      const entryObj = entry.reduce((accumObj,currObj) => Object.assign(accumObj,{[currObj.col_name]: currObj.value}),{})
+      dataObj.push(entryObj)
+    })
+    //@ts-ignore
+    return await prisma[table].createMany({data: dataObj})
+    .then((result:any)=>result)
+    .catch((err:any)=>err)
   }
+
 
   // // Find records
   // const toppings = await prisma.toppings.findMany()
@@ -137,12 +149,10 @@ const findManyDynamic = async(table:PrismaModelName,where:ColAndVal) => {
   }
 
   // // Delete records
-  const deleteManyDynamic = async(table:PrismaModelName,where:ColAndVal) => {
+  const deleteManyDynamic = async(table:PrismaModelName,where?:ColAndVal) => {
     //@ts-ignore
     return await prisma[table].deleteMany({
-      where: {
-        [where.col_name]: where.value 
-      }
+      where: where?{[where.col_name]: where.value}:{} 
     }).then((result:any)=>console.log('deleted',result))
     .catch((err:any)=>console.log(err))
   }
@@ -167,18 +177,21 @@ const findManyDynamic = async(table:PrismaModelName,where:ColAndVal) => {
   // console.log(await updateDynamic('pizzas',{col_name:'pizza_id',value:3},{col_name:'pizza_name',value:'meat lover'}))
   console.log(await findAllDynamic('pizzas'))
 
-  // console.log(
-  //   await createManyDynamic('pizza_components',[
-  //     [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:1}],
-  //     [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:2}],
-  //     [{col_name:'pizza_id',value:2},{col_name:'topping_id',value:2}],
-  //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:1}],
-  //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:2}],
-  //     [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:3}]
-  //     ]
-  //   )
-  // )
-  console.log(await deleteManyDynamic('pizza_components',{col_name:'pizza_id',value:26}))
+  console.log(await deleteManyDynamic('pizza_components'))
+  console.log(
+    await createManyDynamic('pizza_components',[
+      [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:1}],
+      [{col_name:'pizza_id',value:1},{col_name:'topping_id',value:2}],
+      [{col_name:'pizza_id',value:2},{col_name:'topping_id',value:2}],
+      [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:1}],
+      [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:2}],
+      [{col_name:'pizza_id',value:3},{col_name:'topping_id',value:3}]
+      ]
+    )
+  )
+
+  // console.log(await deleteManyDynamic('pizza_components',{col_name:'pizza_id',value:26}))
+  // console.log(await deleteManyDynamic('pizza_components'))
   console.log(await findAllDynamic('pizza_components'))
 }
 

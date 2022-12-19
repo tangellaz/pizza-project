@@ -61,6 +61,24 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
       }
     },[show])
 
+    const [pizza,setPizza] = useState<string>('')
+    useEffect(()=>{
+      setPizza(selectedPizza?.pizza_name)
+    },[selectedPizza])
+    
+    useEffect(()=>{
+      if(pizzaNameExists(pizzas,selectedPizza,pizza)) {
+        setError('Pizza name already exists')
+      } else if (!isAlphaNumeric(pizza)) {
+        setError('Pizza name can only contain alphanumerics')
+      // } else if (pizza === '' && selectedPizza?.pizza_id != -999) {
+      //   setError('Pizzas must have a name')
+      } else {
+        setError('')
+      }
+    },[pizza])
+
+
   // Data Handling Components
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement> ) => {
       e.preventDefault();
@@ -100,24 +118,11 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
       } else {
         await handleRequest('chef','POST',data)
         setError('')
+        setPizza('')
         closeModal()
         refreshData()
       }
     }
-
-    const [pizza,setPizza] = useState<string>('')
-    useEffect(()=>{
-      if(pizzaNameExists(pizzas,selectedPizza,pizza)) {
-        setError('Pizza name already exists')
-      } else if (!isAlphaNumeric(pizza)) {
-        setError('Pizza name can only contain alphanumerics')
-      // } else if (pizza === '' && selectedPizza?.pizza_id != -999) {
-      //   setError('Pizzas must have a name')
-      } else {
-        setError('')
-      }
-    },[pizza])
-
 
   if (isBrowser) {
     return ReactDOM.createPortal(
@@ -136,7 +141,7 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
                 className={styles.nameInput}
                 id={selectedPizza?.pizza_name}
                 name={selectedPizza?.pizza_id.toString()}
-                defaultValue={titleCase(selectedPizza?.pizza_name)}
+                // defaultValue={titleCase(selectedPizza?.pizza_name)}
                 value={titleCase(pizza)}
                 onChange={event => setPizza(event.target.value)}/>
               </label>

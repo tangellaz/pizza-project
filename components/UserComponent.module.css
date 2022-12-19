@@ -38,11 +38,19 @@
 }
 
 .addTopping {
+  transition: var(--transition);
+  padding: var(--gap) calc(var(--gap)/2) var(--gap) calc(var(--gap)/2);
   margin-bottom: var(--gap);
 }
-.listEdit > li:first-of-type:after {
-  background: transparent;
+.addTopping:hover {
+  background: rgba(255,255,255,0.05);
 }
+/*.addTopping:after {
+  background: transparent !important;
+}*/
+/*.listEdit > li:first-of-type:after {
+  background: transparent;
+}*/
 
 .emptyMessage{
   margin: calc(var(--gap)*2) auto;

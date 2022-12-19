@@ -39,10 +39,23 @@ export const createDynamic = async(table:PrismaModelName,arr:ColAndVal[]) => {
   .catch((err:any)=>err)
 }
 
+// // Create many dynamic for multi column
+// // Note: createMany is not supported in sqlite
+// export const createManyDynamic = (table:PrismaModelName,arr:ColAndVal[][]) => {
+//   arr.map(async(dataArray)=>await createDynamic(table,dataArray))
+// }
+
 // Create many dynamic for multi column
-// Note: createMany is not supported in sqlite
-export const createManyDynamic = (table:PrismaModelName,arr:ColAndVal[][]) => {
-  arr.map(async(dataArray)=>await createDynamic(table,dataArray))
+export const createManyDynamic = async(table:PrismaModelName,arr:ColAndVal[][]) => {
+  let dataObj: {[key: string]: string|number}[] = []
+  arr.map((entry)=>{
+    const entryObj = entry.reduce((accumObj,currObj) => Object.assign(accumObj,{[currObj.col_name]: currObj.value}),{})
+    dataObj.push(entryObj)
+  })
+  //@ts-ignore
+  return await prisma[table].createMany({data: dataObj})
+  .then((result:any)=>result)
+  .catch((err:any)=>err)
 }
 
 // // Find records
@@ -119,9 +132,7 @@ export const deleteDynamic = async(table:PrismaModelName,where:ColAndVal) => {
 export const deleteManyDynamic = async(table:PrismaModelName,where:ColAndVal) => {
   //@ts-ignore
   return await prisma[table].deleteMany({
-    where: {
-      [where.col_name]: where.value 
-    }
+    where: where?{[where.col_name]: where.value}:{}
   }).then((result:any)=>result)
   .catch((err:any)=>err)
 }

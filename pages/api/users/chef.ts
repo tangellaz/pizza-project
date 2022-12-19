@@ -42,12 +42,17 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
         if(data.pizza.pizza_id===-999){
           const pizza:pizzaData = await createDynamic('pizzas',[{col_name:'pizza_name',value:data.pizza.pizza_name}])
 
-          data.toppings.map(async(topping:toppingData)=>
-            await createDynamic('pizza_components',[
-              {col_name:'pizza_id',value:pizza.pizza_id},
-              {col_name:'topping_id',value:topping.topping_id}
-            ])
+          // data.toppings.map(async(topping:toppingData)=>
+          //   await createDynamic('pizza_components',[
+          //     {col_name:'pizza_id',value:pizza.pizza_id},
+          //     {col_name:'topping_id',value:topping.topping_id}
+          //   ])
+          // )
+          const relationArray = data.toppings.map((topping:toppingData)=>
+            [{col_name:'pizza_id',value:pizza.pizza_id},
+            {col_name:'topping_id',value:topping.topping_id}]
           )
+          await createManyDynamic('pizza_components',relationArray)
         } else {
           await updateDynamic('pizzas',{col_name:'pizza_id',value:data.pizza.pizza_id},{col_name:'pizza_name',value:data.pizza.pizza_name})
 

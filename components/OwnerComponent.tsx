@@ -38,10 +38,10 @@ const OwnerComponent= ({toppings, refreshData, loading}:ownerInputs) => {
       <h3>Owner</h3>
       <p>Create, edit, and delete toppings</p>
 
-      <ul className={styles.listEdit}>
-        <li className={styles.addTopping}>
+        <div className={styles.addTopping}>
           <EditTopping topping={{topping_id:-999,topping_name:''}} action='add' setEditToppingId={setEditToppingId} refreshData={refreshData} toppings={toppings}/>
-        </li>
+        </div>
+      <ul className={styles.listEdit}>
       {
         toppings.length===0?
         <div className={styles.emptyMessage}>
