@@ -48,7 +48,7 @@ const OwnerComponent= ({toppings, refreshData, loading}:ownerInputs) => {
           <Image src="/add_item.svg" alt="" width={200} height={100}/>
           <p>No toppings here...<br/>Get started by entering new toppings below</p>
         </div>
-        : toppings.map((topping:toppingData)=>
+        : toppings && toppings.map((topping:toppingData)=>
         <li key={topping.topping_id}>
           {topping.topping_id!=editToppingId ?
             <ListItem editItem={()=>setEditToppingId(topping.topping_id)} deleteItem={()=>handleDeleteTopping(topping)} name={titleCase(topping.topping_name)} item={topping}/>

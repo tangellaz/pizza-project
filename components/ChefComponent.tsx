@@ -56,7 +56,7 @@ const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loadi
           <Image src="/add_item.svg" alt="" width={200} height={100}/>
           <p>No pizzas here...<br/>Get started by creating a new pizza below</p>
         </div>
-        : pizzas.map((pizza:pizzaData)=>
+        : pizzas && pizzas.map((pizza:pizzaData)=>
           <li key={pizza.pizza_id}>
             <ListItem editItem={()=>handleEditPizza(pizza)} deleteItem={()=>handleDeletePizza(pizza)} name={titleCase(pizza.pizza_name)} item={pizza}/>
             <ul className={styles.listDisplay}>

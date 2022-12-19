@@ -24,7 +24,7 @@ import {
 
 // export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function Home(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // console.log('props',props)
+  console.log('props',props)
 
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -109,6 +109,6 @@ export const getServerSideProps: GetServerSideProps<propType> = async () => {
   //   props: data
   // }
   return {
-    props: {toppings:toppings,pizzas:pizzas, components:components}
+    props: {toppings:toppings, pizzas:pizzas, components:components}
   }
 }
