@@ -11,6 +11,7 @@ import OwnerComponent from '../components/OwnerComponent';
 import Footer from '../components/Footer';
 
 import { 
+  prisma,
   toppingData,
   pizzaData,
   componentData,
@@ -77,7 +78,6 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   )
 }
 
-import { PrismaClient } from '@prisma/client'
 export const getServerSideProps: GetServerSideProps<propType> = async () => {
 // export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],pizzasList:pizzaData[],componentsList:componentData[]}> = async () => {
   // const data = await fetch('http://localhost:3000/api?user=chef').then(res=>res.json())
@@ -93,12 +93,17 @@ export const getServerSideProps: GetServerSideProps<propType> = async () => {
   // const pizzas = await findAllDynamic('pizzas')
   // const components = await findAllDynamic('pizza_components')
 
+  // HARD CODING
+  const toppings = [{topping_id:1, topping_name:'cheese'}]
+  const pizzas = [{pizza_id:1, pizza_name:'cheese'}]
+  const components = [{component_id:1,pizza_id:1,topping_id:1}]
+
   // console.log({toppings:toppings,pizzas:pizzas,components:components})
 
-  const prisma = new PrismaClient()
-  const toppings:toppingData[] = await prisma.toppings.findMany()
-  const pizzas:pizzaData[] = await prisma.pizzas.findMany()
-  const components:componentData[] = await prisma.pizza_components.findMany()
+  // const prisma = new PrismaClient()
+  // const toppings:toppingData[] = await prisma.toppings.findMany()
+  // const pizzas:pizzaData[] = await prisma.pizzas.findMany()
+  // const components:componentData[] = await prisma.pizza_components.findMany()
 
   // return {
   //   props: {
