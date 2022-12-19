@@ -89,14 +89,14 @@ export const getServerSideProps: GetServerSideProps<propType> = async () => {
   // data.components = await findAllDynamic('pizza_components')
 
 
-  // const toppings = await findAllDynamic('toppings')
-  // const pizzas = await findAllDynamic('pizzas')
-  // const components = await findAllDynamic('pizza_components')
+  const toppings = await findAllDynamic('toppings')
+  const pizzas = await findAllDynamic('pizzas')
+  const components = await findAllDynamic('pizza_components')
 
-  // HARD CODING
-  const toppings = [{topping_id:1, topping_name:'cheese'}]
-  const pizzas = [{pizza_id:1, pizza_name:'cheese'}]
-  const components = [{component_id:1,pizza_id:1,topping_id:1}]
+  // // HARD CODING
+  // const toppings = [{topping_id:1, topping_name:'cheese'}]
+  // const pizzas = [{pizza_id:1, pizza_name:'cheese'}]
+  // const components = [{component_id:1,pizza_id:1,topping_id:1}]
 
   // console.log({toppings:toppings,pizzas:pizzas,components:components})
 
