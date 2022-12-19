@@ -48,6 +48,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
           //     {col_name:'topping_id',value:topping.topping_id}
           //   ])
           // )
+          
           const relationArray = data.toppings.map((topping:toppingData)=>
             [{col_name:'pizza_id',value:pizza.pizza_id},
             {col_name:'topping_id',value:topping.topping_id}]
