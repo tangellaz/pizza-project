@@ -11,6 +11,7 @@ import OwnerComponent from '../components/OwnerComponent';
 import Footer from '../components/Footer';
 
 import { 
+  prisma,
   toppingData,
   pizzaData,
   componentData,
@@ -87,16 +88,17 @@ export const getServerSideProps: GetServerSideProps<propType> = async () => {
   // data.pizzas = await findAllDynamic('pizzas')
   // data.components = await findAllDynamic('pizza_components')
 
-  const toppings = await findAllDynamic('toppings')
-  const pizzas = await findAllDynamic('pizzas')
-  const components = await findAllDynamic('pizza_components')
+
+  // const toppings = await findAllDynamic('toppings')
+  // const pizzas = await findAllDynamic('pizzas')
+  // const components = await findAllDynamic('pizza_components')
 
   // console.log({toppings:toppings,pizzas:pizzas,components:components})
 
   // const prisma = new PrismaClient()
-  // const toppings:toppingData[] = await prisma.toppings.findMany()
-  // const pizzas:pizzaData[] = await prisma.pizzas.findMany()
-  // const components:componentData[] = await prisma.pizza_components.findMany()
+  const toppings:toppingData[] = await prisma.toppings.findMany()
+  const pizzas:pizzaData[] = await prisma.pizzas.findMany()
+  const components:componentData[] = await prisma.pizza_components.findMany()
 
   // return {
   //   props: {
