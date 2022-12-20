@@ -81,7 +81,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
 export const getServerSideProps: GetServerSideProps<propType> = async () => {
 // export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],pizzasList:pizzaData[],componentsList:componentData[]}> = async () => {
   // const data = await fetch('http://localhost:3000/api?user=chef').then(res=>res.json())
-  const {toppings, pizzas, components} = await fetch(`${process.env.API_URL}/api/users/chef`).then(res=>res.json())
+  // const {toppings, pizzas, components} = await fetch(`${process.env.API_URL}/api/users/chef`).then(res=>res.json())
 
   // const data:propType = {toppings:[],pizzas:[], components:[]}
   // console.log('SSR',data)
@@ -90,9 +90,9 @@ export const getServerSideProps: GetServerSideProps<propType> = async () => {
   // data.components = await findAllDynamic('pizza_components')
 
 
-  // const toppings = await findAllDynamic('toppings')
-  // const pizzas = await findAllDynamic('pizzas')
-  // const components = await findAllDynamic('pizza_components')
+  const toppings = await findAllDynamic('toppings')
+  const pizzas = await findAllDynamic('pizzas')
+  const components = await findAllDynamic('pizza_components')
 
   // // HARD CODING
   // const toppings = [{topping_id:1, topping_name:'cheese'}]
