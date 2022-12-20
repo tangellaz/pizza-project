@@ -40,8 +40,10 @@ const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loadi
   }
   const handleDeletePizza = async(pizzaToDelete: pizzaData) => {
     // await deletePizza(pizzaToDelete)
-    await handleRequest('chef','DELETE',pizzaToDelete)
-    refreshData()
+    const res = await handleRequest('chef','DELETE',pizzaToDelete)
+    if (res?res.ok:false) {
+      refreshData()
+    }
   }
 
   return (

@@ -27,8 +27,10 @@ const OwnerComponent= ({toppings, refreshData, loading}:ownerInputs) => {
 
   const handleDeleteTopping = async(toppingToDelete: toppingData) => {
     if(confirmDelete || window.confirm("Caution:\nTopping deletion also deletes pizzas with this topping. This message will not appear again this session.\n\nContinue?")){
-      await handleRequest('owner','DELETE',toppingToDelete)
-      refreshData()
+      const res = await handleRequest('owner','DELETE',toppingToDelete)
+      if (res?res.ok:false) {
+        refreshData()
+      }
     }
     setConfirmDelete(true)
   }

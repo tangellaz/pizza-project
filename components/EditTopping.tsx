@@ -62,11 +62,13 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:Edit
         topping_id: toppingToSubmit.topping_id,
         topping_name: purgeWhitespace(name.toLowerCase())
       }
-      await handleRequest('owner','POST',data)
-      setError('')
-      setValue('')
-      setEditToppingId(NaN)
-      refreshData()
+      const res = await handleRequest('owner','POST',data)
+      if (res?res.ok:false) {
+        setError('')
+        setValue('')
+        setEditToppingId(NaN)
+        refreshData()
+      }
     }
     // // if no change or blank, do not post
     // if(name != '' && name != toppingToSubmit.topping_name){

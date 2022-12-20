@@ -9,11 +9,16 @@ import {
 type dataType = pizzaData | toppingData | {pizza:pizzaData,toppings:toppingData[]}
 
 export const handleRequest = async(user:"chef"|"owner", method:"DELETE"|"POST" ,data:dataType) => {
-  return await resolve(fetch(`/api/users/${user}`, {
+  // return await resolve(fetch(`/api/users/${user}`, {
+  //   method: method,
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify(data),
+  // }))
+  return fetch(`/api/users/${user}`, {
     method: method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  }).then())
+  }).then(res=>res).catch(e=>console.log('Error: ',e))
 }
 
 // export const deletePizza = async(pizza: pizzaData) => {

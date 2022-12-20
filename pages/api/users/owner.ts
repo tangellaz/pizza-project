@@ -20,6 +20,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
   switch (req.method) {
     case 'GET':
       try{
+        // throw new Error('Random error') //Error testing
         const toppingsList = await findAllDynamic('toppings')
         return res.status(200).json({toppings:toppingsList})
       } catch (error) {
@@ -28,12 +29,13 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
     case 'POST':
       try{
+        // throw new Error('Random error') //Error testing
         const data = req.body
         console.log(req.body)
         if(data.topping_id===-999){
-          createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
+          await createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
         } else {
-          updateDynamic('toppings',{col_name:'topping_id',value:data.topping_id},{col_name:'topping_name',value:data.topping_name})
+          await updateDynamic('toppings',{col_name:'topping_id',value:data.topping_id},{col_name:'topping_name',value:data.topping_name})
         }
 
         return res.status(201).json({})
@@ -43,6 +45,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
     case 'DELETE':
       try{
+        // throw new Error('Random error') //Error testing
         const data = req.body
         const pizzaIds = await findManyDynamic("pizza_components",{col_name:'topping_id', value: data.topping_id},{col_name:'pizza_id', value: true})
         const pizzaIdsList = pizzaIds.map((pizza:{pizza_id: number})=>pizza.pizza_id)

@@ -26,6 +26,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
   switch (req.method) {
     case 'GET':
       try{
+        // throw new Error('Random error') //Error testing
         const toppingsList = await findAllDynamic('toppings')
         const pizzasList = await findAllDynamic('pizzas')
         const pizzaComponents = await findAllDynamic('pizza_components')
@@ -38,6 +39,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
     case 'POST':
       try{
+        // throw new Error('Random error') //Error testing
         const data = req.body
         if(data.pizza.pizza_id===-999){
           const pizza:pizzaData = await createDynamic('pizzas',[{col_name:'pizza_name',value:data.pizza.pizza_name}])
@@ -59,13 +61,18 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
           await deleteManyDynamic('pizza_components',{col_name:'pizza_id',value: data.pizza.pizza_id})
           
-          data.toppings.map(async(topping:toppingData)=>
-            console.log(await createDynamic('pizza_components',[
-              {col_name:'pizza_id',value:data.pizza.pizza_id},
-              {col_name:'topping_id',value:topping.topping_id}
-            ])
-            )
+          // data.toppings.map(async(topping:toppingData)=>
+          //   console.log(await createDynamic('pizza_components',[
+          //     {col_name:'pizza_id',value:data.pizza.pizza_id},
+          //     {col_name:'topping_id',value:topping.topping_id}
+          //   ])
+          //   )
+          // )
+          const relationArray = data.toppings.map((topping:toppingData)=>
+            [{col_name:'pizza_id',value:data.pizza.pizza_id},
+            {col_name:'topping_id',value:topping.topping_id}]
           )
+          await createManyDynamic('pizza_components',relationArray)
         }
 
         return res.status(201).json({})
@@ -75,6 +82,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
 
     case 'DELETE':
       try{
+        // throw new Error('Random error') //Error testing
         const data = req.body
         await deleteDynamic('pizzas', {col_name:'pizza_id',value: data.pizza_id})
 

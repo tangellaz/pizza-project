@@ -116,11 +116,13 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
       } else if (pizzaComboExists(data,assembledPizzas)) {
         setError('Pizza already exists with selected toppings')
       } else {
-        await handleRequest('chef','POST',data)
-        setError('')
-        setPizza('')
-        closeModal()
-        refreshData()
+        const res = await handleRequest('chef','POST',data)
+        if (res?res.ok:false) {
+          setError('')
+          setPizza('')
+          closeModal()
+          refreshData()
+        }
       }
     }
 

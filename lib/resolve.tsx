@@ -1,7 +1,7 @@
-export const resolve = async(promise: Promise<string|null>) => {
+export const resolve = async(promise: Promise<Response>) => {
   type resolvedType = {
-    data: string | null,
-    error: string | null
+    data: Response|null,
+    error: any
   }
 
   const resolved:resolvedType = {
