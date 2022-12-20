@@ -102,8 +102,8 @@
 .selection > label {
   cursor: pointer;
   width: 100%;
-  display:block;
-  padding: 0;
+  display:flex;
+  padding: calc(var(--gap)/4) 0;
   padding-bottom: calc(var(--gap)/4);
   transition: var(--transition);
 }
