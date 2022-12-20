@@ -81,8 +81,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
 export const getServerSideProps: GetServerSideProps<propType> = async () => {
 // export const getServerSideProps: GetServerSideProps<{toppingsList:toppingData[],pizzasList:pizzaData[],componentsList:componentData[]}> = async () => {
   // const data = await fetch('http://localhost:3000/api?user=chef').then(res=>res.json())
-  const environment = process.env.NODE_ENV!=='production'?'http://localhost:3000/':''
-  const {toppings, pizzas, components} = await fetch(`${environment}/api/users/chef`).then(res=>res.json())
+  const {toppings, pizzas, components} = await fetch(`${process.env.API_URL}/api/users/chef`).then(res=>res.json())
 
   // const data:propType = {toppings:[],pizzas:[], components:[]}
   // console.log('SSR',data)
