@@ -101,7 +101,6 @@ export const getServerSideProps: GetServerSideProps<propType> = async () => {
 
   // console.log({toppings:toppings,pizzas:pizzas,components:components})
 
-  // const prisma = new PrismaClient()
   // const toppings:toppingData[] = await prisma.toppings.findMany()
   // const pizzas:pizzaData[] = await prisma.pizzas.findMany()
   // const components:componentData[] = await prisma.pizza_components.findMany()
