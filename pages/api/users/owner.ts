@@ -31,7 +31,7 @@ export default async function handle(req :NextApiRequest, res :NextApiResponse) 
       try{
         // throw new Error('Random error') //Error testing
         const data = req.body
-        console.log(req.body)
+        // console.log(req.body)
         if(data.topping_id===-999){
           await createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
         } else {

@@ -10,6 +10,8 @@ import ChefComponent from '../components/ChefComponent';
 import OwnerComponent from '../components/OwnerComponent';
 import Footer from '../components/Footer';
 
+import { useDataQuery } from '../lib/api'
+
 import { 
   prisma,
   toppingData,
@@ -25,7 +27,9 @@ import {
 
 // export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function Home(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log('props',props)
+  // console.log('props',props)
+  const { data, error, isLoading, isFetching, isSuccess } = useDataQuery()
+
 
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -35,11 +39,11 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   }
 
   const [assembledPizzas,setAssembledPizzas] = useState<mapToppings>()
-  const [data,setData] = useState<propType>(props)
+  const [propsData,setPropsData] = useState<propType>(props)
   const [user,setUser] = useState<string>('')
 
   useEffect(()=>{
-    setData(props)
+    setPropsData(props)
     setAssembledPizzas(pizzaAssembler({toppings:props.toppings,pizzas:props.pizzas,components:props.components}))
   },[props])
 
@@ -64,13 +68,26 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
           </select>
         </div>
 
-        {/*<UserComponent user='Owner' toppings={data.toppings} refreshData={refreshData} loading={loading}/>*/}
-        {/*<UserComponent user='Chef' toppings={data.toppings} pizzas={data.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>*/}
+        {/*<UserComponent user='Owner' toppings={propsData.toppings} refreshData={refreshData} loading={loading}/>*/}
+        {/*<UserComponent user='Chef' toppings={propsData.toppings} pizzas={propsData.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>*/}
         <div className={styles.userContainer}>
-          {user==='owner'||user==='superuser'?<OwnerComponent toppings={data.toppings} refreshData={refreshData} loading={loading}/>:null}
+          {user==='owner'||user==='superuser'?<OwnerComponent toppings={propsData.toppings} refreshData={refreshData} loading={loading}/>:null}
           {user==='superuser'?<span></span>:null}
-          {user==='chef'||user==='superuser'?<ChefComponent toppings={data.toppings} pizzas={data.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>:null}
+          {user==='chef'||user==='superuser'?<ChefComponent toppings={propsData.toppings} pizzas={propsData.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>:null}
         </div>
+
+        {isLoading && <h2>...Loading</h2>}
+        {isFetching && <h2>...Fetching</h2>}
+        {error && <h2>Something went wrong</h2>}
+        {isSuccess && (
+          <div>
+            <ul>
+              {data.pizzas.map((pizza,i)=><li key={i}>{pizza.pizza_name}</li>)}
+              {data.toppings.map((topping,i)=><li key={i}>{topping.topping_name}</li>)}
+            </ul>
+          </div>
+        )}
+
       </main>
       <Footer/>
       <div id="modal-root"></div>

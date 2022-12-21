@@ -2,6 +2,11 @@ import React, {useState,useEffect} from 'react'
 import styles from './EditTopping.module.css'
 import {toppingData} from '../prisma/utils'
 import {handleRequest} from '../lib/api'
+
+import { 
+  useAddToppingMutation
+ } from '../lib/api'
+
 import {
   toppingExists,
   titleCase,
@@ -22,6 +27,8 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:Edit
   const [btnAction,setBtnAction] = useState<string>(action)
   const [error,setError] = useState<string>('');
 
+  const [addTopping] = useAddToppingMutation()
+  
   useEffect(()=>{
     topping.topping_name!=''?setValue(topping.topping_name):null
   },[])
@@ -62,13 +69,17 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:Edit
         topping_id: toppingToSubmit.topping_id,
         topping_name: purgeWhitespace(name.toLowerCase())
       }
-      const res = await handleRequest('owner','POST',data)
-      if (res?res.ok:false) {
-        setError('')
-        setValue('')
-        setEditToppingId(NaN)
-        refreshData()
-      }
+      // const res = await handleRequest('owner','POST',data)
+      // if (res?res.ok:false) {
+      //   setError('')
+      //   setValue('')
+      //   setEditToppingId(NaN)
+      //   refreshData()
+      // }
+      await addTopping(data)
+      setError('')
+      setValue('')
+      setEditToppingId(NaN)
     }
     // // if no change or blank, do not post
     // if(name != '' && name != toppingToSubmit.topping_name){

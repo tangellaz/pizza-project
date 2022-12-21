@@ -56,3 +56,37 @@ export const handleRequest = async(user:"chef"|"owner", method:"DELETE"|"POST" ,
 //     body: JSON.stringify(topping),
 //   }).then())
 // }
+
+
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {propType} from './utils';
+
+export const pizzaApi = createApi({
+  reducerPath: "pizzaApi",
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
+  endpoints: (builder) => ({
+    data: builder.query<propType, void>({
+      query:() => 'users/chef'
+    }),
+    addTopping: builder.mutation<void, toppingData>({
+      query: topping => ({
+        url: 'users/owner',
+        method: 'POST',
+        body: topping
+      })
+    }),
+    deleteTopping: builder.mutation<void, toppingData>({
+      query: topping => ({
+        url: 'users/owner',
+        method: 'DELETE',
+        body: topping
+      })
+    })
+  })
+})
+
+export const { 
+  useDataQuery,
+  useAddToppingMutation,
+  useDeleteToppingMutation,
+ } = pizzaApi

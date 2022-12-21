@@ -6,6 +6,10 @@ import EditTopping from './EditTopping'
 import styles from './UserComponent.module.css'
 
 import { 
+  useDeleteToppingMutation
+ } from '../lib/api'
+
+import { 
   toppingData,
   pizzaData,
   componentData,
@@ -24,13 +28,16 @@ const OwnerComponent= ({toppings, refreshData, loading}:ownerInputs) => {
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>()
   const [editToppingId, setEditToppingId] = useState<number>(NaN)
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false)
+  
+  const [deleteTopping] = useDeleteToppingMutation()
 
   const handleDeleteTopping = async(toppingToDelete: toppingData) => {
     if(confirmDelete || window.confirm("Caution:\nTopping deletion also deletes pizzas with this topping. This message will not appear again this session.\n\nContinue?")){
-      const res = await handleRequest('owner','DELETE',toppingToDelete)
-      if (res?res.ok:false) {
-        refreshData()
-      }
+      // const res = await handleRequest('owner','DELETE',toppingToDelete)
+      // if (res?res.ok:false) {
+      //   refreshData()
+      // }
+      await deleteTopping(toppingToDelete)
     }
     setConfirmDelete(true)
   }
