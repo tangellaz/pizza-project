@@ -63,7 +63,7 @@ import {propType} from './utils';
 
 export const pizzaApi = createApi({
   reducerPath: "pizzaApi",
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.API_URL }),
   tagTypes: ['Topping', 'Pizza'],
   endpoints: (build) => ({
     getData: build.query<propType, void>({
