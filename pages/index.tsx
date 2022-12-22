@@ -10,7 +10,7 @@ import ChefComponent from '../components/ChefComponent';
 import OwnerComponent from '../components/OwnerComponent';
 import Footer from '../components/Footer';
 
-import { useDataQuery } from '../lib/api'
+import { useGetDataQuery } from '../lib/api'
 
 import { 
   prisma,
@@ -27,8 +27,8 @@ import {
 
 // export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 export default function Home(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // console.log('props',props)
-  const { data, error, isLoading, isFetching, isSuccess } = useDataQuery()
+  console.log('props',props)
+  const { data, error, isLoading, isFetching, isSuccess } = useGetDataQuery()
 
 
   const [loading, setLoading] = useState(false)
@@ -41,11 +41,16 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   const [assembledPizzas,setAssembledPizzas] = useState<mapToppings>()
   const [propsData,setPropsData] = useState<propType>(props)
   const [user,setUser] = useState<string>('')
-
   useEffect(()=>{
+    console.log("SET PROPS DATA", props)
     setPropsData(props)
-    setAssembledPizzas(pizzaAssembler({toppings:props.toppings,pizzas:props.pizzas,components:props.components}))
-  },[props])
+  },[])
+  useEffect(()=>{
+    if (data) {
+      setPropsData(data)
+      setAssembledPizzas(pizzaAssembler({toppings:data.toppings,pizzas:data.pizzas,components:data.components}))
+    }
+  },[data])
 
   return (
     <div>
@@ -76,7 +81,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
           {user==='chef'||user==='superuser'?<ChefComponent toppings={propsData.toppings} pizzas={propsData.pizzas} refreshData={refreshData} assembledPizzas={assembledPizzas} loading={loading}/>:null}
         </div>
 
-        {isLoading && <h2>...Loading</h2>}
+{/*        {isLoading && <h2>...Loading</h2>}
         {isFetching && <h2>...Fetching</h2>}
         {error && <h2>Something went wrong</h2>}
         {isSuccess && (
@@ -86,7 +91,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
               {data.toppings.map((topping,i)=><li key={i}>{topping.topping_name}</li>)}
             </ul>
           </div>
-        )}
+        )}*/}
 
       </main>
       <Footer/>
@@ -106,6 +111,11 @@ export const getServerSideProps: GetServerSideProps<propType> = async () => {
   // data.pizzas = await findAllDynamic('pizzas')
   // data.components = await findAllDynamic('pizza_components')
 
+  // CANT USE HOOKS HERE... use next-redux-wrapper... Messy
+  // const { data, error, isLoading, isFetching, isSuccess } = useGetDataQuery()
+  // const toppings = data.toppings
+  // const pizzas = data.pizzas
+  // const components = data.components
 
   const toppings = await findAllDynamic('toppings')
   const pizzas = await findAllDynamic('pizzas')

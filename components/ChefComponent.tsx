@@ -13,6 +13,7 @@ import {
 } from '../prisma/utils'
 
 import {handleRequest} from '../lib/api'
+import { useDeletePizzaMutation } from '../lib/api'
 import {mapToppings, titleCase} from '../lib/utils'
 
 type chefInputs = {
@@ -32,6 +33,8 @@ const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loadi
 
   const [showModal, setShowModal] = useState(false)
 
+  const [deletePizza] = useDeletePizzaMutation()
+
   const handleEditPizza = (pizzaToEdit: pizzaData) => {
     const toppingsSelected = assembledPizzas?assembledPizzas[pizzaToEdit.pizza_id]:[]
     setPizzaSelect(pizzaToEdit)
@@ -39,11 +42,11 @@ const ChefComponent = ({toppings, pizzas=[], refreshData, assembledPizzas, loadi
     setShowModal(true)
   }
   const handleDeletePizza = async(pizzaToDelete: pizzaData) => {
-    // await deletePizza(pizzaToDelete)
-    const res = await handleRequest('chef','DELETE',pizzaToDelete)
-    if (res?res.ok:false) {
-      refreshData()
-    }
+    await deletePizza(pizzaToDelete)
+    // const res = await handleRequest('chef','DELETE',pizzaToDelete)
+    // if (res?res.ok:false) {
+    //   refreshData()
+    // }
   }
 
   return (

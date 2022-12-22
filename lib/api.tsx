@@ -59,34 +59,57 @@ export const handleRequest = async(user:"chef"|"owner", method:"DELETE"|"POST" ,
 
 
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import { HYDRATE } from "next-redux-wrapper";
 import {propType} from './utils';
 
 export const pizzaApi = createApi({
   reducerPath: "pizzaApi",
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
-  endpoints: (builder) => ({
-    data: builder.query<propType, void>({
-      query:() => 'users/chef'
+  tagTypes: ['Topping', 'Pizza'],
+  endpoints: (build) => ({
+    getData: build.query<propType, void>({
+      query:() => 'users/chef',
+      providesTags: ['Topping', 'Pizza'],
     }),
-    addTopping: builder.mutation<void, toppingData>({
+    editTopping: build.mutation<void, toppingData>({
       query: topping => ({
         url: 'users/owner',
         method: 'POST',
         body: topping
-      })
+      }),
+      invalidatesTags: ['Topping'],
     }),
-    deleteTopping: builder.mutation<void, toppingData>({
+    deleteTopping: build.mutation<void, toppingData>({
       query: topping => ({
         url: 'users/owner',
         method: 'DELETE',
         body: topping
-      })
-    })
+      }),
+      invalidatesTags: ['Topping'],
+    }),
+    editPizza: build.mutation<void, {pizza:pizzaData,toppings:toppingData[]}>({
+      query: data => ({
+        url: 'users/chef',
+        method: 'POST',
+        body: data
+      }),
+      invalidatesTags: ['Pizza'],
+    }),
+    deletePizza: build.mutation<void, pizzaData>({
+      query: data => ({
+        url: 'users/chef',
+        method: 'DELETE',
+        body: data
+      }),
+      invalidatesTags: ['Pizza'],
+    }),
   })
 })
 
 export const { 
-  useDataQuery,
-  useAddToppingMutation,
+  useGetDataQuery,
+  useEditToppingMutation,
   useDeleteToppingMutation,
+  useEditPizzaMutation,
+  useDeletePizzaMutation,
  } = pizzaApi

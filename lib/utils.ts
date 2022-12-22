@@ -63,7 +63,7 @@ export const toppingExists = (toppings:toppingData[], selectedTopping:toppingDat
 
 export const pizzaNameExists = (pizzas:pizzaData[], selectedPizza:pizzaData, pizzaName:string):boolean => {
   // check if pizza name used already
-  const checkPizza = pizzas.find(({pizza_name})=>pizza_name===pizzaName)
+  const checkPizza = pizzas.find(({pizza_name})=>pizza_name===pizzaName.toLowerCase())
   // if pizza exists and not itself
   return(checkPizza && checkPizza.pizza_id != selectedPizza.pizza_id ? true : false)
 }

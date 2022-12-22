@@ -7,6 +7,7 @@ import {
   pizzaData,
 } from '../prisma/utils'
 
+import { useEditPizzaMutation } from '../lib/api'
 import {handleRequest} from '../lib/api'
 import {
   mapToppings,
@@ -29,11 +30,13 @@ type modalInputs = {
 }
 
 const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableToppings, refreshData, pizzas, assembledPizzas}:modalInputs) => {
+  const [editPizza] = useEditPizzaMutation()
   const [error,setError] = useState<string>('');
   
   // Utility Components
     const [isBrowser,setIsBrowser] = useState(false);
     const overlayRef = useRef<HTMLDivElement>(null);
+    let inputRef = useRef<HTMLInputElement>(null);
 
     const handleCloseClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
       e.preventDefault();
@@ -50,33 +53,42 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
 
     useEffect(() => {
       setIsBrowser(true)
+      const close = (e: KeyboardEvent) => {
+        if(e.key === 'Escape') {closeModal()}}
+        window.addEventListener('keydown', close)
+      return () => window.removeEventListener('keydown', close)
     },[])
 
     useEffect(()=>{
+      
       const body = document.body
       if (show) {
+        setPizzaName(selectedPizza?.pizza_name) //set pizzaName on show. Remove text flicker.
+        //@ts-ignore
+        inputRef && inputRef.focus()        
         body.style.overflowY = "hidden";
       } else {
+        setPizzaName('') //clear pizzaName on close. Remove text flicker.
         body.style.overflowY = "auto";
       }
     },[show])
 
-    const [pizza,setPizza] = useState<string>('')
+    const [pizzaName,setPizzaName] = useState<string>('')
     useEffect(()=>{
-      setPizza(selectedPizza?.pizza_name)
+      setPizzaName(selectedPizza?.pizza_name)
     },[selectedPizza])
     
     useEffect(()=>{
-      if(pizzaNameExists(pizzas,selectedPizza,pizza)) {
+      if(pizzaNameExists(pizzas,selectedPizza,pizzaName)) {
         setError('Pizza name already exists')
-      } else if (!isAlphaNumeric(pizza)) {
+      } else if (!isAlphaNumeric(pizzaName)) {
         setError('Pizza name can only contain alphanumerics')
-      // } else if (pizza === '' && selectedPizza?.pizza_id != -999) {
+      // } else if (pizzaName === '' && selectedPizza?.pizza_id != -999) {
       //   setError('Pizzas must have a name')
       } else {
         setError('')
       }
-    },[pizza])
+    },[pizzaName])
 
 
   // Data Handling Components
@@ -109,20 +121,28 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
         }
       }
       // Error handling
-      if (!data.pizza.pizza_name) {
+      if(pizzaNameExists(pizzas,selectedPizza,pizzaName)) {
+        setError('Pizza name already exists')
+      } else if (!isAlphaNumeric(pizzaName)) {
+        setError('Pizza name can only contain alphanumerics')
+      } else if (!data.pizza.pizza_name) {
         setError('Pizzas must have a name')
       } else if (data.toppings.length === 0) {
         setError('Pizzas must have toppings')
       } else if (pizzaComboExists(data,assembledPizzas)) {
         setError('Pizza already exists with selected toppings')
       } else {
-        const res = await handleRequest('chef','POST',data)
-        if (res?res.ok:false) {
-          setError('')
-          setPizza('')
-          closeModal()
-          refreshData()
-        }
+        // const res = await handleRequest('chef','POST',data)
+        // if (res?res.ok:false) {
+        //   setError('')
+        //   setPizzaName('')
+        //   closeModal()
+        //   refreshData()
+        // }
+        editPizza(data)
+        setError('')
+        // setPizzaName('')
+        closeModal()
       }
     }
 
@@ -131,7 +151,7 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
       show?
         <div className={styles.overlay} ref={overlayRef} onClick={(e)=>overlayClickHandler(e)}>
           <div className={styles.card}>
-            <button onClick={(e)=>handleCloseClick(e)} aria-label="close pop-up" title="close pop-up button">
+            <button onClick={handleCloseClick} aria-label="close pop-up" title="close pop-up button">
               <img src="/exit.svg" decoding="async" width="24" height="24" alt=""/>
             </button>
 
@@ -143,9 +163,10 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
                 className={styles.nameInput}
                 id={selectedPizza?.pizza_name}
                 name={selectedPizza?.pizza_id.toString()}
+                ref={(input)=>inputRef=input}
                 // defaultValue={titleCase(selectedPizza?.pizza_name)}
-                value={titleCase(pizza)}
-                onChange={event => setPizza(event.target.value)}/>
+                value={titleCase(pizzaName)}
+                onChange={event => setPizzaName(event.target.value)}/>
               </label>
               {error?<p className={styles.error}><span>Error:</span><span>{error}</span></p>:null}
               <fieldset>

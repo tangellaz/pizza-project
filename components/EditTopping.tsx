@@ -4,7 +4,7 @@ import {toppingData} from '../prisma/utils'
 import {handleRequest} from '../lib/api'
 
 import { 
-  useAddToppingMutation
+  useEditToppingMutation
  } from '../lib/api'
 
 import {
@@ -27,7 +27,7 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:Edit
   const [btnAction,setBtnAction] = useState<string>(action)
   const [error,setError] = useState<string>('');
 
-  const [addTopping] = useAddToppingMutation()
+  const [editTopping] = useEditToppingMutation()
   
   useEffect(()=>{
     topping.topping_name!=''?setValue(topping.topping_name):null
@@ -76,7 +76,7 @@ const EditTopping = ({topping,action,setEditToppingId,refreshData,toppings}:Edit
       //   setEditToppingId(NaN)
       //   refreshData()
       // }
-      await addTopping(data)
+      await editTopping(data)
       setError('')
       setValue('')
       setEditToppingId(NaN)
