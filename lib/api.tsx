@@ -59,7 +59,6 @@ export const handleRequest = async(user:"chef"|"owner", method:"DELETE"|"POST" ,
 
 
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import { HYDRATE } from "next-redux-wrapper";
 import {propType} from './utils';
 
 export const pizzaApi = createApi({
