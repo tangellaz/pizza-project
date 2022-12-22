@@ -42,7 +42,7 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   const [propsData,setPropsData] = useState<propType>(props)
   const [user,setUser] = useState<string>('')
   useEffect(()=>{
-    console.log("SET PROPS DATA", props)
+    // console.log("SET PROPS DATA", props)
     setPropsData(props)
   },[])
   useEffect(()=>{
