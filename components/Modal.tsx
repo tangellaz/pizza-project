@@ -65,7 +65,7 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
       if (show) {
         setPizzaName(selectedPizza?.pizza_name) //set pizzaName on show. Remove text flicker.
         //@ts-ignore
-        inputRef && inputRef.focus()        
+        inputRef.current && inputRef.current.focus()        
         body.style.overflowY = "hidden";
       } else {
         setPizzaName('') //clear pizzaName on close. Remove text flicker.
@@ -163,7 +163,7 @@ const Modal = ({show, closeModal, selectedPizza, selectedToppings, availableTopp
                 className={styles.nameInput}
                 id={selectedPizza?.pizza_name}
                 name={selectedPizza?.pizza_id.toString()}
-                ref={(input)=>inputRef=input}
+                ref={inputRef}
                 // defaultValue={titleCase(selectedPizza?.pizza_name)}
                 value={titleCase(pizzaName)}
                 onChange={event => setPizzaName(event.target.value)}/>
