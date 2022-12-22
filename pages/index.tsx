@@ -42,10 +42,12 @@ export default function Home(props: InferGetServerSidePropsType<typeof getServer
   const [propsData,setPropsData] = useState<propType>(props)
   const [user,setUser] = useState<string>('')
   useEffect(()=>{
-    // console.log("SET PROPS DATA", props)
+    // use SSR props on load
     setPropsData(props)
+    setAssembledPizzas(pizzaAssembler({toppings:props.toppings,pizzas:props.pizzas,components:props.components}))
   },[])
   useEffect(()=>{
+     // swap to rtk-query data on client
     if (data) {
       setPropsData(data)
       setAssembledPizzas(pizzaAssembler({toppings:data.toppings,pizzas:data.pizzas,components:data.components}))

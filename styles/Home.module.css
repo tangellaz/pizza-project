@@ -42,6 +42,9 @@
 .userSelectContainer > select:focus {
   box-shadow: none;
 }
+.userSelectContainer > select > optgroup {
+  font-size: clamp(1rem, 0.91rem + 0.45vw, 1.2rem);
+}
 
 .userContainer {
   display: flex;
