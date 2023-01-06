@@ -1,14 +1,15 @@
-import {resolve} from './resolve'
+import { resolve } from "./resolve";
 
-import { 
-  toppingData,
-  pizzaData,
-  componentData,
-} from '../prisma/utils'
+type dataType =
+  | pizzaData
+  | toppingData
+  | { pizza: pizzaData; toppings: toppingData[] };
 
-type dataType = pizzaData | toppingData | {pizza:pizzaData,toppings:toppingData[]}
-
-export const handleRequest = async(user:"chef"|"owner", method:"DELETE"|"POST" ,data:dataType) => {
+export const handleRequest = async (
+  user: "chef" | "owner",
+  method: "DELETE" | "POST",
+  data: dataType
+) => {
   // return await resolve(fetch(`/api/users/${user}`, {
   //   method: method,
   //   headers: { "Content-Type": "application/json" },
@@ -18,8 +19,10 @@ export const handleRequest = async(user:"chef"|"owner", method:"DELETE"|"POST" ,
     method: method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-  }).then(res=>res).catch(e=>console.log('Error: ',e))
-}
+  })
+    .then((res) => res)
+    .catch((e) => console.log("Error: ", e));
+};
 
 // export const deletePizza = async(pizza: pizzaData) => {
 //   // return await resolve(fetch('/api?user=chef', {
@@ -57,58 +60,60 @@ export const handleRequest = async(user:"chef"|"owner", method:"DELETE"|"POST" ,
 //   }).then())
 // }
 
-
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {propType} from './utils';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { propType } from "./utils";
 
 export const pizzaApi = createApi({
   reducerPath: "pizzaApi",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.API_URL+'api/' }),
-  tagTypes: ['Topping', 'Pizza'],
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.API_URL + "api/" }),
+  tagTypes: ["Topping", "Pizza"],
   endpoints: (build) => ({
     getData: build.query<propType, void>({
-      query:() => 'users/chef',
-      providesTags: ['Topping', 'Pizza'],
+      query: () => "users/chef",
+      providesTags: ["Topping", "Pizza"],
     }),
     editTopping: build.mutation<void, toppingData>({
-      query: topping => ({
-        url: 'users/owner',
-        method: 'POST',
-        body: topping
+      query: (topping) => ({
+        url: "users/owner",
+        method: "POST",
+        body: topping,
       }),
-      invalidatesTags: ['Topping'],
+      invalidatesTags: ["Topping"],
     }),
     deleteTopping: build.mutation<void, toppingData>({
-      query: topping => ({
-        url: 'users/owner',
-        method: 'DELETE',
-        body: topping
+      query: (topping) => ({
+        url: "users/owner",
+        method: "DELETE",
+        body: topping,
       }),
-      invalidatesTags: ['Topping'],
+      invalidatesTags: ["Topping"],
     }),
-    editPizza: build.mutation<void, {pizza:pizzaData,toppings:toppingData[]}>({
-      query: data => ({
-        url: 'users/chef',
-        method: 'POST',
-        body: data
+    editPizza: build.mutation<
+      void,
+      { pizza: pizzaData; toppings: toppingData[] }
+    >({
+      query: (data) => ({
+        url: "users/chef",
+        method: "POST",
+        body: data,
       }),
-      invalidatesTags: ['Pizza'],
+      invalidatesTags: ["Pizza"],
     }),
     deletePizza: build.mutation<void, pizzaData>({
-      query: data => ({
-        url: 'users/chef',
-        method: 'DELETE',
-        body: data
+      query: (data) => ({
+        url: "users/chef",
+        method: "DELETE",
+        body: data,
       }),
-      invalidatesTags: ['Pizza'],
+      invalidatesTags: ["Pizza"],
     }),
-  })
-})
+  }),
+});
 
-export const { 
+export const {
   useGetDataQuery,
   useEditToppingMutation,
   useDeleteToppingMutation,
   useEditPizzaMutation,
   useDeletePizzaMutation,
- } = pizzaApi
+} = pizzaApi;

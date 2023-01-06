@@ -1,10 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
 
 import {
   toppingData,
   pizzaData,
   componentData,
-
   findAllDynamic,
   findManyDynamic,
   createDynamic,
@@ -13,54 +12,74 @@ import {
   updateManyDynamic,
   deleteDynamic,
   deleteManyDynamic,
-  deleteManyDynamica
-} from '../../../prisma/utils';
+  deleteManyDynamica,
+} from "../../../prisma/utils";
 
-export default async function handle(req :NextApiRequest, res :NextApiResponse) {
+export default async function handle(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   switch (req.method) {
-    case 'GET':
-      try{
+    case "GET":
+      try {
         // throw new Error('Random error') //Error testing
-        const toppingsList = await findAllDynamic('toppings')
-        return res.status(200).json({toppings:toppingsList})
+        const toppingsList = await findAllDynamic("toppings");
+        return res.status(200).json({ toppings: toppingsList });
       } catch (error) {
         return res.status(403).json({ error: "Error occured." });
       }
 
-    case 'POST':
-      try{
+    case "POST":
+      try {
         // throw new Error('Random error') //Error testing
-        const data = req.body
+        const data = req.body;
         // console.log(req.body)
-        if(data.topping_id===-999){
-          await createDynamic('toppings', [{col_name:'topping_name',value:data.topping_name}])
+        if (data.topping_id === -999) {
+          await createDynamic("toppings", [
+            { col_name: "topping_name", value: data.topping_name },
+          ]);
         } else {
-          await updateDynamic('toppings',{col_name:'topping_id',value:data.topping_id},{col_name:'topping_name',value:data.topping_name})
+          await updateDynamic(
+            "toppings",
+            { col_name: "topping_id", value: data.topping_id },
+            { col_name: "topping_name", value: data.topping_name }
+          );
         }
 
-        return res.status(201).json({})
+        return res.status(201).json({});
       } catch (error) {
         return res.status(403).json({ error: "Error occured." });
       }
 
-    case 'DELETE':
-      try{
+    case "DELETE":
+      try {
         // throw new Error('Random error') //Error testing
-        const data = req.body
-        const pizzaIds = await findManyDynamic("pizza_components",{col_name:'topping_id', value: data.topping_id},{col_name:'pizza_id', value: true})
-        const pizzaIdsList = pizzaIds.map((pizza:{pizza_id: number})=>pizza.pizza_id)
+        const data = req.body;
+        const pizzaIds = await findManyDynamic(
+          "pizza_components",
+          { col_name: "topping_id", value: data.topping_id },
+          { col_name: "pizza_id", value: true }
+        );
+        const pizzaIdsList = pizzaIds.map(
+          (pizza: { pizza_id: number }) => pizza.pizza_id
+        );
 
-        await deleteManyDynamic("pizzas",{col_name:"pizza_id",value: {in: pizzaIdsList}})
-        await deleteDynamic('toppings', {col_name:'topping_id',value: data.topping_id})
+        await deleteManyDynamic("pizzas", {
+          col_name: "pizza_id",
+          value: { in: pizzaIdsList },
+        });
+        await deleteDynamic("toppings", {
+          col_name: "topping_id",
+          value: data.topping_id,
+        });
 
-        return res.status(200).json([])
+        return res.status(200).json([]);
       } catch (error) {
         return res.status(403).json({ error: "Error occured." });
       }
-    
-    default:
-      return res.setHeader('Allow', ['GET','POST','DELETE'])
-      return res.status(405).end(`Method ${req.method} Not Allowed`)
 
+    default:
+      return res.setHeader("Allow", ["GET", "POST", "DELETE"]);
+      return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

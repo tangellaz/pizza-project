@@ -15,26 +15,27 @@ a {
   box-sizing: border-box;
 }
 
-body{
+body {
   --gap: 1rem;
 
   --primary: #00e0ff;
-  --secondary: #EA1CE2;
+  --secondary: #ea1ce2;
   --dark: #000000;
-  --light: #FFFFFF;
+  --light: #ffffff;
 
   --transition: 0.2s all ease-in;
 
-  --svg-filter: invert(78%) sepia(31%) saturate(6753%) hue-rotate(144deg) brightness(103%) contrast(107%);
+  --svg-filter: invert(78%) sepia(31%) saturate(6753%) hue-rotate(144deg)
+    brightness(103%) contrast(107%);
 
-  --box-shadow: 0px 0px 4px 4px rgb(255,255,255,0.25);
-  --focusShadow: 0 0 4px 4px rgb(255,255,255,0.25);
+  --box-shadow: 0px 0px 4px 4px rgb(255, 255, 255, 0.25);
+  --focusShadow: 0 0 4px 4px rgb(255, 255, 255, 0.25);
 
   --btnText: var(--light);
   --btnBackground: var(--dark);
   --btnBorder: var(--light);
   --btnShadow: none;
-  --btnPadding: calc(var(--gap)/2) var(--gap);
+  --btnPadding: calc(var(--gap) / 2) var(--gap);
 
   --btnTextHover: var(--light);
   --btnBackgroundHover: var(--dark);
@@ -61,19 +62,19 @@ h6 {
 }
 
 h1 {
-  font-family:  'Open Sans', serif;
+  font-family: "Open Sans", serif;
   font-size: clamp(2.5rem, 2.05rem + 2.27vw, 3.5rem);
   margin: 2.5rem 0;
 }
 
 h2 {
-  font-family:  'Open Sans', serif;
+  font-family: "Open Sans", serif;
   font-size: clamp(2rem, 1.55rem + 2.27vw, 3rem);
   margin: 2.25rem 0;
 }
 
 h3 {
-  font-family:  'Open Sans', serif;
+  font-family: "Open Sans", serif;
   font-size: clamp(1.25rem, 0.8rem + 2.27vw, 2.25rem);
   margin: 2rem 0;
 }
@@ -114,7 +115,7 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  box-shadow: 0 0 2px 2px rgb(255,255,255,0.25);
+  box-shadow: 0 0 2px 2px rgb(255, 255, 255, 0.25);
 }
 
 input::placeholder {
@@ -122,7 +123,7 @@ input::placeholder {
 }
 
 button,
-input[type='submit'] {
+input[type="submit"] {
   cursor: pointer;
   text-transform: uppercase;
   font-weight: 700;
@@ -137,24 +138,24 @@ input[type='submit'] {
 
 @media (hover: hover) and (pointer: fine) {
   button:hover,
-  input[type='submit']:hover {
+  input[type="submit"]:hover {
     color: var(--btnTextHover);
     background: var(--btnBackgroundHover);
     border: 2px solid var(--btnBorderHover);
     box-shadow: var(--btnShadowHover);
-  }  
+  }
 }
 
 button:active,
-input[type='submit']:active {
+input[type="submit"]:active {
   color: var(--btnTextHover);
   background: var(--btnBackgroundHover);
   border: 2px solid var(--btnBorderHover);
   box-shadow: var(--btnShadowHover);
-}  
+}
 
 button:focus,
-input[type='submit']:focus {
+input[type="submit"]:focus {
   box-shadow: var(--focusShadow);
 }
 
@@ -167,7 +168,6 @@ input[type='submit']:focus {
     background: black;
   }
 }
-
 
 /*@media only screen and (min-width: 768px) {
   :root {
