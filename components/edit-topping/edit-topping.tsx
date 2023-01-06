@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import styles from "./edit-topping.module.css";
 
-import { handleRequest } from "../../lib/api"; //delete
 import { useEditToppingMutation } from "../../lib/api";
 
 import {
@@ -17,7 +16,6 @@ const EditTopping = ({
   topping,
   action,
   setEditToppingId,
-  refreshData,
   toppings,
 }: EditToppingProps) => {
   const [value, setValue] = useState<string>(topping.topping_name);
@@ -28,15 +26,26 @@ const EditTopping = ({
 
   useEffect(() => {
     topping.topping_name != "" ? setValue(topping.topping_name) : null;
+
+    const cancel = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setBtnAction(action);
+        setError("");
+        setValue("");
+        setEditToppingId(NaN);
+      }
+    };
+    window.addEventListener("keydown", cancel);
+    return () => window.removeEventListener("keydown", cancel);
   }, []);
 
   useEffect(() => {
-    // if (value is not changed and not blank) OR (value is blank and not a new entry)
-    // if((value===topping?.topping_name&&value!='')||(value===''&&topping?.topping_id!=-999)) {
-    if (value === topping?.topping_name && value != "") {
+    if (value.toLowerCase() === topping?.topping_name && value != "") {
+      // value is not changed and not blank
       setBtnAction("cancel");
       setError("");
     } else if (value === "" && topping?.topping_id != -999) {
+      // value is blank and not a new entry
       setBtnAction("cancel");
       setError("Topping must have a name");
     } else if (!isAlphaNumeric(value)) {
@@ -65,31 +74,11 @@ const EditTopping = ({
         topping_id: toppingToSubmit.topping_id,
         topping_name: purgeWhitespace(name.toLowerCase()),
       };
-      // const res = await handleRequest('owner','POST',data)
-      // if (res?res.ok:false) {
-      //   setError('')
-      //   setValue('')
-      //   setEditToppingId(NaN)
-      //   refreshData()
-      // }
       await editTopping(data);
       setError("");
       setValue("");
       setEditToppingId(NaN);
     }
-    // // if no change or blank, do not post
-    // if(name != '' && name != toppingToSubmit.topping_name){
-    //   const data = {
-    //     topping_id: toppingToSubmit.topping_id,
-    //     topping_name: name
-    //   }
-    //   await handleRequest('owner','POST',toppingToSubmit)
-    //   setError('')
-    //   refreshData()
-    // }
-    // // clean up
-    // setValue('')
-    // setEditToppingId(NaN)
   };
 
   return (

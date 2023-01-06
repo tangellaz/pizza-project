@@ -13,16 +13,7 @@ import {
   isAlphaNumeric,
 } from "../../lib/utils";
 
-type modalInputs = {
-  show: boolean;
-  closeModal: () => void;
-  selectedPizza: pizzaData;
-  selectedToppings?: toppingData[];
-  availableToppings: toppingData[];
-  refreshData: () => void;
-  pizzas: pizzaData[]; //error handling
-  assembledPizzas?: mapToppings; //error handling
-};
+import { ModalProps } from "./modal.types";
 
 const Modal = ({
   show,
@@ -30,10 +21,9 @@ const Modal = ({
   selectedPizza,
   selectedToppings,
   availableToppings,
-  refreshData,
   pizzas,
   assembledPizzas,
-}: modalInputs) => {
+}: ModalProps) => {
   const [editPizza] = useEditPizzaMutation();
   const [error, setError] = useState<string>("");
 

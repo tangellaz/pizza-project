@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
 import styles from "./list-item.module.css";
 
-type ListItemInputs = {
-  editItem: () => void;
-  deleteItem: () => void;
-  name: string;
-  item: pizzaData | toppingData;
-};
-
-const ListItem = ({ editItem, deleteItem, name, item }: ListItemInputs) => {
+import { ListItemProps } from "./list-item.types";
+const ListItem = ({ editItem, deleteItem, name, item }: ListItemProps) => {
   return (
     <div className={styles.container}>
       <span>{name}</span>

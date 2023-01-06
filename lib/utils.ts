@@ -67,7 +67,7 @@ export const toppingExists = (
 ): boolean => {
   // check if topping name used already
   const checkTopping = toppings.find(
-    ({ topping_name }) => topping_name === toppingName
+    ({ topping_name }) => topping_name === toppingName.toLowerCase()
   );
   // if topping exists and not itself
   return checkTopping && checkTopping.topping_id != selectedTopping.topping_id

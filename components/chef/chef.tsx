@@ -1,32 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Modal from "../modal/modal";
-import LoadingModal from "../loading-modal/loading-modal";
 import ListItem from "../list-item/list-item";
 import EditTopping from "../edit-topping/edit-topping";
 import styles from "../UserComponent.module.css";
 
-import { handleRequest } from "../../lib/api";
 import { useDeletePizzaMutation } from "../../lib/api";
 import { mapToppings, titleCase } from "../../lib/utils";
 
 import { ChefProps } from "./chef.types";
 
-const Chef = ({
-  toppings,
-  pizzas = [],
-  refreshData,
-  assembledPizzas,
-  loading,
-}: ChefProps) => {
+const Chef = ({ toppings, pizzas = [], assembledPizzas }: ChefProps) => {
   const [pizzaSelect, setPizzaSelect] = useState<pizzaData>({
     pizza_id: -999,
     pizza_name: "",
   });
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>();
-
   const [editToppingId, setEditToppingId] = useState<number>(NaN);
-
   const [showModal, setShowModal] = useState(false);
 
   const [deletePizza] = useDeletePizzaMutation();
@@ -41,10 +31,6 @@ const Chef = ({
   };
   const handleDeletePizza = async (pizzaToDelete: pizzaData) => {
     await deletePizza(pizzaToDelete);
-    // const res = await handleRequest('chef','DELETE',pizzaToDelete)
-    // if (res?res.ok:false) {
-    //   refreshData()
-    // }
   };
 
   return (
@@ -95,14 +81,12 @@ const Chef = ({
         )}
       </ul>
 
-      <LoadingModal show={loading} />
       <Modal
         closeModal={() => setShowModal(false)}
         show={showModal}
         selectedPizza={pizzaSelect}
         selectedToppings={toppingSelect}
         availableToppings={toppings}
-        refreshData={refreshData}
         pizzas={pizzas}
         assembledPizzas={assembledPizzas}
       />

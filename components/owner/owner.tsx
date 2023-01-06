@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import LoadingModal from "../loading-modal/loading-modal";
 import ListItem from "../list-item/list-item";
 import EditTopping from "../edit-topping/edit-topping";
 import styles from "../UserComponent.module.css";
@@ -12,7 +11,7 @@ import { titleCase } from "../../lib/utils";
 
 import { OwnerProps } from "./owner.types";
 
-const Owner = ({ toppings, refreshData, loading }: OwnerProps) => {
+const Owner = ({ toppings }: OwnerProps) => {
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>();
   const [editToppingId, setEditToppingId] = useState<number>(NaN);
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
@@ -45,7 +44,6 @@ const Owner = ({ toppings, refreshData, loading }: OwnerProps) => {
           topping={{ topping_id: -999, topping_name: "" }}
           action="add"
           setEditToppingId={setEditToppingId}
-          refreshData={refreshData}
           toppings={toppings}
         />
       </div>
@@ -75,7 +73,6 @@ const Owner = ({ toppings, refreshData, loading }: OwnerProps) => {
                   topping={topping}
                   action="save"
                   setEditToppingId={setEditToppingId}
-                  refreshData={refreshData}
                   toppings={toppings}
                 />
               )}
@@ -83,8 +80,6 @@ const Owner = ({ toppings, refreshData, loading }: OwnerProps) => {
           ))
         )}
       </ul>
-
-      <LoadingModal show={loading} />
     </div>
   );
 };
