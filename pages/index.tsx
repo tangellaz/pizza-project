@@ -10,6 +10,8 @@ import Owner from "../components/owner/owner";
 import Footer from "../components/footer/footer";
 
 import { useGetDataQuery } from "../lib/api";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { setAssembledPizzas } from "../redux/assembled-pizzas.slice";
 
 import { propType, mapToppings, pizzaAssembler } from "../lib/utils";
 
@@ -20,31 +22,40 @@ export default function Home(
   console.log("props", props);
   const { data, error, isLoading, isFetching, isSuccess } = useGetDataQuery();
 
-  const [assembledPizzas, setAssembledPizzas] = useState<mapToppings>();
+  // const [assembledPizzas, setAssembledPizzas] = useState<mapToppings>();
+  const assembledPizzas = useAppSelector((state) => state.assembledPizzas);
+  const dispatch = useAppDispatch();
+
   const [propsData, setPropsData] = useState<propType>(props);
   const [user, setUser] = useState<string>("");
 
   useEffect(() => {
     // use SSR props on load
-    setPropsData(props);
-    setAssembledPizzas(
-      pizzaAssembler({
-        toppings: props.toppings,
-        pizzas: props.pizzas,
-        components: props.components,
-      })
+    // setPropsData(props);
+    // setAssembledPizzas(
+    dispatch(
+      setAssembledPizzas(
+        pizzaAssembler({
+          toppings: props.toppings,
+          pizzas: props.pizzas,
+          components: props.components,
+        })
+      )
     );
   }, []);
   useEffect(() => {
     // swap to rtk-query data on client
     if (data) {
       setPropsData(data);
-      setAssembledPizzas(
-        pizzaAssembler({
-          toppings: data.toppings,
-          pizzas: data.pizzas,
-          components: data.components,
-        })
+      // setAssembledPizzas(
+      dispatch(
+        setAssembledPizzas(
+          pizzaAssembler({
+            toppings: data.toppings,
+            pizzas: data.pizzas,
+            components: data.components,
+          })
+        )
       );
     }
   }, [data]);
