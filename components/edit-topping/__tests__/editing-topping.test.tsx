@@ -35,7 +35,6 @@ describe("EditTopping rendering:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
@@ -49,7 +48,6 @@ describe("EditTopping rendering:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
@@ -63,7 +61,6 @@ describe("EditTopping rendering:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
@@ -77,7 +74,6 @@ describe("EditTopping rendering:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
@@ -94,7 +90,6 @@ describe("EditTopping actions:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
@@ -122,7 +117,6 @@ describe("EditTopping actions:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
@@ -158,7 +152,6 @@ describe("EditTopping actions:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
@@ -187,7 +180,6 @@ describe("EditTopping actions:", () => {
         topping={Props.topping}
         action={Props.action}
         setEditToppingId={Props.setEditToppingId}
-        refreshData={Props.refreshData}
         toppings={Props.toppings}
       />
     );
