@@ -14,7 +14,7 @@ import {
   // updateTopping,
   updatePizza,
   // deleteTopping,
-  // deletePizza,
+  deletePizza,
   // deleteManyPizzas,
   deleteManyComponents,
 } from "../../../prisma/utils";
