@@ -17,7 +17,7 @@ import { pizzaAssembler } from "../lib/utils";
 
 export default function Home() {
   const { data, error, isLoading, isFetching, isSuccess } = useGetDataQuery();
-
+  // console.log("data", data);
   const dispatch = useAppDispatch();
 
   const [user, setUser] = useState<string>("");

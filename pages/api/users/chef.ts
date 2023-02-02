@@ -103,9 +103,10 @@ export default async function handle(
 
           // link toppings to pizza
           const relationArray = data.toppings.map((topping: toppingData) => ({
-            pizza_id: data.pizza_id,
+            pizza_id: data.pizza.pizza_id,
             topping_id: topping.topping_id,
           }));
+
           await createManyComponents(relationArray);
         }
 
