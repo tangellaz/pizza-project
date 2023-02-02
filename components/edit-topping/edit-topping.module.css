@@ -1,9 +1,9 @@
 .container {
   display: flex;
-  width:100%;
+  width: 100%;
 }
 .container > input {
-  width: calc(320px - var(--gap)*2 - var(--gap) - (36px * 2 + 8px));
+  width: calc(320px - var(--gap) * 2 - var(--gap) - (36px * 2 + 8px));
 }
 
 .actionBtn {
@@ -14,9 +14,9 @@
   justify-content: center;
   align-items: center;
   padding: 0.25rem 0.25rem;
-/*  margin-left: calc(var(--gap)/2);*/
+  /*  margin-left: calc(var(--gap)/2);*/
   margin-left: auto;
-  margin-right: calc((36px * 2 + var(--gap)/2)/2 - 18px); 
+  margin-right: calc((36px * 2 + var(--gap) / 2) / 2 - 18px);
 }
 
 .actionBtn > img {
@@ -36,9 +36,9 @@
   margin-top: 0;
   color: red;
   display: flex;
-  margin: calc(var(--gap)/2) 0;
+  margin: calc(var(--gap) / 2) 0;
   font-size: 1rem;
 }
 .error > span:nth-of-type(2) {
-  margin-left: calc(var(--gap)/2);
+  margin-left: calc(var(--gap) / 2);
 }

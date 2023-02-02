@@ -1,36 +1,42 @@
 .container {
-  width: calc(320px - var(--gap)*2);
+  width: calc(320px - var(--gap) * 2);
   margin: 0 auto;
 }
 .container > h3 {
-  margin: 0 auto calc(var(--gap)/2) calc(var(--gap)/2);
+  margin: 0 auto calc(var(--gap) / 2) calc(var(--gap) / 2);
 }
 .container > p {
-  margin: 0 auto calc(var(--gap)*2) calc(var(--gap)/2);
-  font-size: clamp(1rem, 0.91rem + 0.45vw, 1.2rem)
+  margin: 0 auto calc(var(--gap) * 2) calc(var(--gap) / 2);
+  font-size: clamp(1rem, 0.91rem + 0.45vw, 1.2rem);
 }
 
 .listEdit {
-  width: calc(320px - var(--gap)*2);
+  width: calc(320px - var(--gap) * 2);
   margin: auto;
 }
 
 .listEdit > li {
-  padding: var(--gap) calc(var(--gap)/2) 0 calc(var(--gap)/2);
+  padding: var(--gap) calc(var(--gap) / 2) 0 calc(var(--gap) / 2);
   transition: var(--transition);
 }
 
 .listEdit > li:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .listEdit > li:after {
   content: "";
   display: block;
   width: calc(100% + var(--gap));
-  transform: translateX(calc(-1*var(--gap)/2));
+  transform: translateX(calc(-1 * var(--gap) / 2));
   height: 1px;
-  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 85%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(255, 255, 255, 1) 15%,
+    rgba(255, 255, 255, 1) 85%,
+    rgba(0, 0, 0, 0) 100%
+  );
   margin-top: var(--gap);
 }
 .listEdit > li:last-of-type:after {
@@ -38,19 +44,27 @@
 }
 
 .addTopping {
+  transition: var(--transition);
+  padding: var(--gap) calc(var(--gap) / 2) var(--gap) calc(var(--gap) / 2);
   margin-bottom: var(--gap);
 }
-.listEdit > li:first-of-type:after {
-  background: transparent;
+.addTopping:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
+/*.addTopping:after {
+  background: transparent !important;
+}*/
+/*.listEdit > li:first-of-type:after {
+  background: transparent;
+}*/
 
-.emptyMessage{
-  margin: calc(var(--gap)*2) auto;
+.emptyMessage {
+  margin: calc(var(--gap) * 2) auto;
   text-align: center;
 }
 
 .listDisplay {
-  width: calc(320px - var(--gap)*3);
+  width: calc(320px - var(--gap) * 3);
   margin-left: calc(var(--gap));
   margin-bottom: calc(var(--gap));
 }
@@ -67,7 +81,7 @@
   justify-content: center;
   align-items: center;
   padding: 0.25rem 0.25rem;
-  margin-left: calc(var(--gap)/2);
+  margin-left: calc(var(--gap) / 2);
 }
 
 .actionBtn > img {
@@ -85,24 +99,24 @@
 
 .editContainer {
   display: flex;
-  width:100%;
+  width: 100%;
 }
 .editContainer > button {
-  margin:auto;
+  margin: auto;
 }
 
 .createPizzaBtn {
   display: block;
   margin: auto;
-  margin-top: calc(var(--gap)*3 - 3px);
-  margin-bottom: calc(var(--gap)*1.5 + 6px);
+  margin-top: calc(var(--gap) * 3 - 3px);
+  margin-bottom: calc(var(--gap) * 1.5 + 6px);
 }
 
 @media only screen and (min-width: 768px) {
   .container {
-    width: calc(380px - var(--gap)*2);
+    width: calc(380px - var(--gap) * 2);
   }
   .listEdit {
-    width: calc(380px - var(--gap)*2);
+    width: calc(380px - var(--gap) * 2);
   }
 }
