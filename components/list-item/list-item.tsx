@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import styles from "./list-item.module.css";
 
 import { ListItemProps } from "./list-item.types";

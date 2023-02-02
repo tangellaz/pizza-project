@@ -7,7 +7,6 @@ import styles from "../UserComponent.module.css";
 import { useDeleteToppingMutation } from "../../lib/api";
 import { useAppSelector } from "../../redux/hooks";
 
-import { handleRequest } from "../../lib/api";
 import { titleCase } from "../../lib/utils";
 
 const Owner = () => {
@@ -25,10 +24,6 @@ const Owner = () => {
         "Caution:\nTopping deletion also deletes pizzas with this topping. This message will not appear again this session.\n\nContinue?"
       )
     ) {
-      // const res = await handleRequest('owner','DELETE',toppingToDelete)
-      // if (res?res.ok:false) {
-      //   refreshData()
-      // }
       await deleteTopping(toppingToDelete);
     }
     setConfirmDelete(true);
@@ -44,7 +39,6 @@ const Owner = () => {
           topping={{ topping_id: -999, topping_name: "" }}
           action="add"
           setEditToppingId={setEditToppingId}
-          toppings={toppings}
         />
       </div>
       <ul className={styles.listEdit}>
@@ -73,7 +67,6 @@ const Owner = () => {
                   topping={topping}
                   action="save"
                   setEditToppingId={setEditToppingId}
-                  toppings={toppings}
                 />
               )}
             </li>

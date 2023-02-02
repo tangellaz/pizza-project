@@ -4,9 +4,8 @@ import styles from "./modal.module.css";
 
 import { useEditPizzaMutation } from "../../lib/api";
 import { useAppSelector } from "../../redux/hooks";
-import { handleRequest } from "../../lib/api";
+
 import {
-  mapToppings,
   pizzaNameExists,
   pizzaComboExists,
   titleCase,
@@ -21,11 +20,10 @@ const Modal = ({
   closeModal,
   selectedPizza,
   selectedToppings,
-  availableToppings,
-}: // pizzas,
-// assembledPizzas,
-ModalProps) => {
+}: ModalProps) => {
   const assembledPizzas = useAppSelector((state) => state.assembledPizzas);
+  const availableToppings = useAppSelector((state) => state.toppings);
+
   const pizzas = useAppSelector((state) => state.pizzas);
   const [editPizza] = useEditPizzaMutation();
   const [error, setError] = useState<string>("");
@@ -135,13 +133,6 @@ ModalProps) => {
     } else if (pizzaComboExists(data, assembledPizzas)) {
       setError("Pizza already exists with selected toppings");
     } else {
-      // const res = await handleRequest('chef','POST',data)
-      // if (res?res.ok:false) {
-      //   setError('')
-      //   setPizzaName('')
-      //   closeModal()
-      //   refreshData()
-      // }
       editPizza(data);
       setError("");
       // setPizzaName('')

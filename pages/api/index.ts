@@ -250,6 +250,10 @@ export default async function handle(
       try {
         // throw new Error('Random error') //Error testing
         const toppingsList = await findManyToppings();
+        const pizzasList = await findManyPizzas();
+        // remove
+        // const pizzaComponents = await findAllDynamic("pizza_components");
+
         const combinations = await findAll();
 
         // cleaning up nested objects from database
@@ -269,15 +273,10 @@ export default async function handle(
           }
         );
 
-        // remove
-        const pizzasList = await findManyPizzas();
-        const pizzaComponents = await findAllDynamic("pizza_components");
-
         return res.status(200).json({
           toppings: toppingsList,
-          combinedList: combinedList,
           pizzas: pizzasList,
-          components: pizzaComponents,
+          combinedList: combinedList,
         });
       } catch (error) {
         return res.status(403).json({ error: "Error occured." });

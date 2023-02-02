@@ -3,8 +3,6 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { renderWithProviders } from "../test-utils";
 
-import { propType } from "../lib/utils";
-
 const Props = {
   toppings: [
     { topping_id: 1, topping_name: "pepperoni" },

@@ -8,4 +8,14 @@ declare global {
     topping_id: number | null;
   };
   type combinedData = toppingData & pizzaData;
+
+  type propType = {
+    toppings: toppingData[];
+    pizzas: pizzaData[];
+    combinedList: combinedData[];
+  };
+
+  type mapToppings = {
+    [key: string]: toppingData[];
+  };
 }

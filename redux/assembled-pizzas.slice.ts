@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { mapToppings } from "../lib/utils";
 
 // type InitialState = { assembledPizzas: mapToppings | undefined };
 // const initialState: InitialState = { assembledPizzas: {} };

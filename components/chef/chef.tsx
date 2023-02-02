@@ -6,16 +6,12 @@ import EditTopping from "../edit-topping/edit-topping";
 import styles from "../UserComponent.module.css";
 
 import { useDeletePizzaMutation } from "../../lib/api";
-import { mapToppings, titleCase } from "../../lib/utils";
+import { titleCase } from "../../lib/utils";
 import { useAppSelector } from "../../redux/hooks";
 
 const Chef = () => {
   const assembledPizzas = useAppSelector((state) => state.assembledPizzas);
-  const toppings = useAppSelector((state) => state.toppings);
   const pizzas = useAppSelector((state) => state.pizzas);
-  console.log("chef", { toppings });
-  console.log("chef", { pizzas });
-  console.log("chef", { assembledPizzas });
 
   const [pizzaSelect, setPizzaSelect] = useState<pizzaData>({
     pizza_id: -999,
@@ -93,9 +89,6 @@ const Chef = () => {
         show={showModal}
         selectedPizza={pizzaSelect}
         selectedToppings={toppingSelect}
-        availableToppings={toppings}
-        // pizzas={pizzas}
-        // assembledPizzas={assembledPizzas}
       />
     </div>
   );

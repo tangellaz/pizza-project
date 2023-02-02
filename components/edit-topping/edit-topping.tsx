@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./edit-topping.module.css";
 
 import { useEditToppingMutation } from "../../lib/api";
+import { useAppSelector } from "../../redux/hooks";
 
 import {
   toppingExists,
@@ -16,8 +17,8 @@ const EditTopping = ({
   topping,
   action,
   setEditToppingId,
-  toppings,
 }: EditToppingProps) => {
+  const toppings = useAppSelector((state) => state.toppings);
   const [value, setValue] = useState<string>(topping.topping_name);
   const [btnAction, setBtnAction] = useState<string>(action);
   const [error, setError] = useState<string>("");

@@ -61,7 +61,6 @@ export const handleRequest = async (
 // }
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { propType } from "./utils";
 
 export const pizzaApi = createApi({
   reducerPath: "pizzaApi",

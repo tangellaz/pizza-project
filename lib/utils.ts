@@ -1,19 +1,7 @@
-export type propType = {
-  toppings: toppingData[];
-  pizzas: pizzaData[];
-  components: componentData[];
-  combinedList: combinedData[];
-};
-
-export type mapToppings = {
-  [key: string]: toppingData[];
-};
-
 /* pizzaAssembler synthesizes pizzas by mapping toppings to pizzas */
 export const pizzaAssembler = ({
   toppings,
   pizzas,
-  components,
   combinedList,
 }: propType): mapToppings => {
   let mapToppings: mapToppings = {};
@@ -37,40 +25,40 @@ export const pizzaAssembler = ({
   return mapToppings;
 };
 
-export const pizzaAssemblerOld = ({
-  toppings,
-  pizzas,
-  components,
-  combinedList,
-}: propType): mapToppings => {
-  let mapToppings: mapToppings = {};
+// export const pizzaAssemblerOld = ({
+//   toppings,
+//   pizzas,
+//   components,
+//   combinedList,
+// }: propType): mapToppings => {
+//   let mapToppings: mapToppings = {};
 
-  // create and initialize map object of empty arrays
-  pizzas.map((pizza) => {
-    mapToppings[pizza.pizza_id] = [];
-  });
+//   // create and initialize map object of empty arrays
+//   pizzas.map((pizza) => {
+//     mapToppings[pizza.pizza_id] = [];
+//   });
 
-  /* loop through component data,
-      map component topping to topping object by ids
-      push found topping to corresponding pizza in the mapToppings 
-  */
-  components.map((component) => {
-    const topping = toppings.find(
-      (topping) => component.topping_id === topping.topping_id
-    );
-    topping && component.pizza_id != null
-      ? mapToppings[component.pizza_id].push(topping)
-      : null;
-  });
+//   /* loop through component data,
+//       map component topping to topping object by ids
+//       push found topping to corresponding pizza in the mapToppings
+//   */
+//   components.map((component) => {
+//     const topping = toppings.find(
+//       (topping) => component.topping_id === topping.topping_id
+//     );
+//     topping && component.pizza_id != null
+//       ? mapToppings[component.pizza_id].push(topping)
+//       : null;
+//   });
 
-  // // sort by topping_id
-  // pizzas.map(pizza=>{mapToppings[pizza.pizza_id] = toppingIdSort(mapToppings[pizza.pizza_id])})
-  // // sort by topping__name
-  pizzas.map((pizza) => {
-    mapToppings[pizza.pizza_id] = toppingNameSort(mapToppings[pizza.pizza_id]);
-  });
-  return mapToppings;
-};
+//   // // sort by topping_id
+//   // pizzas.map(pizza=>{mapToppings[pizza.pizza_id] = toppingIdSort(mapToppings[pizza.pizza_id])})
+//   // // sort by topping__name
+//   pizzas.map((pizza) => {
+//     mapToppings[pizza.pizza_id] = toppingNameSort(mapToppings[pizza.pizza_id]);
+//   });
+//   return mapToppings;
+// };
 
 export const toppingNameSort = (ary: toppingData[]): toppingData[] =>
   ary.sort((a: toppingData, b: toppingData): number => {
