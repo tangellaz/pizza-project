@@ -30,7 +30,6 @@ export default function Home() {
           pizzaAssembler({
             toppings: data.toppings,
             pizzas: data.pizzas,
-            components: data.components,
             combinedList: data.combinedList,
           })
         )

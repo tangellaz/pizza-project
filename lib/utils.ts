@@ -5,7 +5,7 @@ export const pizzaAssembler = ({
   combinedList,
 }: propType): mapToppings => {
   let mapToppings: mapToppings = {};
-  console.log("combinedList", combinedList);
+
   // create map {pizza_id: []}
   combinedList.map((link) => {
     if (!mapToppings[link.pizza_id]) {
@@ -16,49 +16,14 @@ export const pizzaAssembler = ({
       topping_name: link.topping_name,
     });
   });
-  console.log("mapToppings1", mapToppings);
+
   // sort by topping__name
   for (const [key, value] of Object.entries(mapToppings)) {
     mapToppings[key] = toppingNameSort(mapToppings[key]);
   }
-  console.log("mapToppings2", mapToppings);
+
   return mapToppings;
 };
-
-// export const pizzaAssemblerOld = ({
-//   toppings,
-//   pizzas,
-//   components,
-//   combinedList,
-// }: propType): mapToppings => {
-//   let mapToppings: mapToppings = {};
-
-//   // create and initialize map object of empty arrays
-//   pizzas.map((pizza) => {
-//     mapToppings[pizza.pizza_id] = [];
-//   });
-
-//   /* loop through component data,
-//       map component topping to topping object by ids
-//       push found topping to corresponding pizza in the mapToppings
-//   */
-//   components.map((component) => {
-//     const topping = toppings.find(
-//       (topping) => component.topping_id === topping.topping_id
-//     );
-//     topping && component.pizza_id != null
-//       ? mapToppings[component.pizza_id].push(topping)
-//       : null;
-//   });
-
-//   // // sort by topping_id
-//   // pizzas.map(pizza=>{mapToppings[pizza.pizza_id] = toppingIdSort(mapToppings[pizza.pizza_id])})
-//   // // sort by topping__name
-//   pizzas.map((pizza) => {
-//     mapToppings[pizza.pizza_id] = toppingNameSort(mapToppings[pizza.pizza_id]);
-//   });
-//   return mapToppings;
-// };
 
 export const toppingNameSort = (ary: toppingData[]): toppingData[] =>
   ary.sort((a: toppingData, b: toppingData): number => {
