@@ -20,7 +20,7 @@ export default function Home() {
   // console.log("data", data);
   const dispatch = useAppDispatch();
 
-  const [user, setUser] = useState<string>("");
+  const [user, setUser] = useState<string>("Select user");
 
   useEffect(() => {
     if (data) {

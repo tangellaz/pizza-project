@@ -32,7 +32,6 @@ const Chef = () => {
     setShowModal(true);
   };
   const handleDeletePizza = async (pizzaToDelete: pizzaData) => {
-    console.log("DELETE");
     await deletePizza(pizzaToDelete);
   };
 
