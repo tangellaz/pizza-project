@@ -4,8 +4,8 @@ declare global {
   type toppingData = { topping_id: number; topping_name: string };
   type pizzaData = { pizza_id: number; pizza_name: string };
   type componentData = {
-    component_id: number;
     pizza_id: number | null;
     topping_id: number | null;
   };
+  type combinedData = toppingData & pizzaData;
 }

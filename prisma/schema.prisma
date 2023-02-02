@@ -8,11 +8,11 @@ datasource db {
 }
 
 model pizza_components {
-  component_id Int       @id @default(autoincrement())
-  pizza_id     Int?
-  topping_id   Int?
+  pizza_id     Int
+  topping_id   Int
   pizzas       pizzas?   @relation(fields: [pizza_id], references: [pizza_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pizza")
   toppings     toppings? @relation(fields: [topping_id], references: [topping_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_toppings")
+  @@id([pizza_id, topping_id])
 }
 
 model pizzas {

@@ -65,8 +65,8 @@ async function main() {
   ) => {
     return await prisma.pizza_components
       .createMany({ data: dataObj })
-      .then((result: any) => result)
-      .catch((err: any) => err);
+      .then((result: any) => console.log("created", result))
+      .catch((err: any) => console.log(err));
   };
   // console.log(
   //   await createManyComponents([
@@ -96,6 +96,18 @@ async function main() {
   //     },
   //   ])
   // );
+  console.log(
+    await createManyComponents([
+      {
+        pizza_id: 3,
+        topping_id: 3,
+      },
+      {
+        pizza_id: 3,
+        topping_id: 39,
+      },
+    ])
+  );
 
   const findAll = async () => {
     return await prisma.pizza_components
@@ -111,21 +123,37 @@ async function main() {
   };
   console.log("findAll", await findAll());
 
-  const findAllToppings = async () => {
+  const findManyToppings = async () => {
     return await prisma.toppings
       .findMany()
       .then((result: any) => result)
       .catch((err: any) => err);
   };
-  // console.log(await findAllToppings());
+  // console.log(await findManyToppings());
 
-  const findAllPizzas = async () => {
+  const findManyPizzas = async () => {
     return await prisma.pizzas
       .findMany()
       .then((result: any) => result)
       .catch((err: any) => err);
   };
-  // console.log(await findAllPizzas());
+  // console.log(await findManyPizzas());
+
+  const findManyComponents = async (where: ColAndVal, select: ColAndVal) => {
+    const criteria = {
+      select: { [select.col_name]: select.value },
+      where: { [where.col_name]: where.value },
+    };
+
+    return await prisma.pizza_components
+      .findMany(criteria)
+      .then((result: any) => result)
+      .catch((err: any) => err);
+  };
+  // console.log(await findManyComponents(
+  //   { col_name: "topping_id", value: 1 },
+  //   { col_name: "pizza_id", value: true })
+  // );
 
   const updateTopping = async (where: ColAndVal, data: ColAndVal) => {
     return await prisma.toppings
@@ -173,7 +201,7 @@ async function main() {
       .then((result: any) => console.log("deleted", result))
       .catch((err: any) => console.log(err));
   };
-  // console.log(await deleteTopping({ topping_id: 1 }));
+  // console.log(await deleteTopping({ topping_id: 34 }));
 
   const deletePizza = async (where: { pizza_id: number }) => {
     return await prisma.pizzas
@@ -202,7 +230,7 @@ async function main() {
   // );
 
   const deleteManyComponents = async (where?: ColAndVal) => {
-    return await prisma.pizzas
+    return await prisma.pizza_components
       .deleteMany({
         where: where ? { [where.col_name]: where.value } : {},
       })

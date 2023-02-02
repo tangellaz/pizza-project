@@ -6,6 +6,6 @@ export type ModalProps = {
   selectedPizza: pizzaData;
   selectedToppings?: toppingData[];
   availableToppings: toppingData[];
-  pizzas: pizzaData[]; //error handling
-  assembledPizzas?: mapToppings; //error handling
+  // pizzas: pizzaData[]; //error handling
+  // assembledPizzas?: mapToppings; //error handling
 };

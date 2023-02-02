@@ -12,41 +12,43 @@ import Footer from "../components/footer/footer";
 import { useGetDataQuery } from "../lib/api";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { setAssembledPizzas } from "../redux/assembled-pizzas.slice";
+import { setToppings } from "../redux/toppings.slice";
+import { setPizzas } from "../redux/pizzas.slice";
 
 import { propType, mapToppings, pizzaAssembler } from "../lib/utils";
 
 // export default function Home({toppingsList,pizzasList,componentsList}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-export default function Home(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-) {
-  console.log("props", props);
+export default function Home() {
+  // props: InferGetServerSidePropsType<typeof getServerSideProps>
+  // console.log("props", props);
   const { data, error, isLoading, isFetching, isSuccess } = useGetDataQuery();
-
+  console.log("data", data);
   // const [assembledPizzas, setAssembledPizzas] = useState<mapToppings>();
-  const assembledPizzas = useAppSelector((state) => state.assembledPizzas);
+  // const assembledPizzas = useAppSelector((state) => state.assembledPizzas);
+  // console.log("assembledPizzas", assembledPizzas);
   const dispatch = useAppDispatch();
 
-  const [propsData, setPropsData] = useState<propType>(props);
+  // const [propsData, setPropsData] = useState<propType>(props);
   const [user, setUser] = useState<string>("");
 
-  useEffect(() => {
-    // use SSR props on load
-    // setPropsData(props);
-    // setAssembledPizzas(
-    dispatch(
-      setAssembledPizzas(
-        pizzaAssembler({
-          toppings: props.toppings,
-          pizzas: props.pizzas,
-          components: props.components,
-        })
-      )
-    );
-  }, []);
+  // useEffect(() => {
+  //   // use SSR props on load
+  //   // setPropsData(props);
+  //   // setAssembledPizzas(
+  //   dispatch(
+  //     setAssembledPizzas(
+  //       pizzaAssembler({
+  //         toppings: props.toppings,
+  //         pizzas: props.pizzas,
+  //         components: props.components,
+  //       })
+  //     )
+  //   );
+  // }, []);
   useEffect(() => {
     // swap to rtk-query data on client
     if (data) {
-      setPropsData(data);
+      // setPropsData(data);
       // setAssembledPizzas(
       dispatch(
         setAssembledPizzas(
@@ -54,9 +56,12 @@ export default function Home(
             toppings: data.toppings,
             pizzas: data.pizzas,
             components: data.components,
+            combinedList: data.combinedList,
           })
         )
       );
+      dispatch(setToppings(data.toppings));
+      dispatch(setPizzas(data.pizzas));
     }
   }, [data]);
 
@@ -90,17 +95,11 @@ export default function Home(
         </div>
 
         <div className={styles.userContainer}>
-          {user === "owner" || user === "superuser" ? (
-            <Owner toppings={propsData.toppings} />
+          {(user === "owner" || user === "superuser") && data ? (
+            <Owner />
           ) : null}
           {user === "superuser" ? <span></span> : null}
-          {user === "chef" || user === "superuser" ? (
-            <Chef
-              toppings={propsData.toppings}
-              pizzas={propsData.pizzas}
-              assembledPizzas={assembledPizzas}
-            />
-          ) : null}
+          {(user === "chef" || user === "superuser") && data ? <Chef /> : null}
         </div>
       </main>
       <Footer />
@@ -109,12 +108,12 @@ export default function Home(
   );
 }
 
-export const getServerSideProps: GetServerSideProps<propType> = async () => {
-  const toppings = await findAllDynamic("toppings");
-  const pizzas = await findAllDynamic("pizzas");
-  const components = await findAllDynamic("pizza_components");
+// export const getServerSideProps: GetServerSideProps<propType> = async () => {
+//   const toppings = await findAllDynamic("toppings");
+//   const pizzas = await findAllDynamic("pizzas");
+//   const components = await findAllDynamic("pizza_components");
 
-  return {
-    props: { toppings: toppings, pizzas: pizzas, components: components },
-  };
-};
+//   return {
+//     props: { toppings: toppings, pizzas: pizzas, components: components },
+//   };
+// };

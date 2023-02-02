@@ -2,6 +2,7 @@ export type propType = {
   toppings: toppingData[];
   pizzas: pizzaData[];
   components: componentData[];
+  combinedList: combinedData[];
 };
 
 export type mapToppings = {
@@ -13,6 +14,34 @@ export const pizzaAssembler = ({
   toppings,
   pizzas,
   components,
+  combinedList,
+}: propType): mapToppings => {
+  let mapToppings: mapToppings = {};
+  console.log("combinedList", combinedList);
+  // create map {pizza_id: []}
+  combinedList.map((link) => {
+    if (!mapToppings[link.pizza_id]) {
+      mapToppings[link.pizza_id] = [];
+    }
+    mapToppings[link.pizza_id].push({
+      topping_id: link.topping_id,
+      topping_name: link.topping_name,
+    });
+  });
+  console.log("mapToppings1", mapToppings);
+  // sort by topping__name
+  for (const [key, value] of Object.entries(mapToppings)) {
+    mapToppings[key] = toppingNameSort(mapToppings[key]);
+  }
+  console.log("mapToppings2", mapToppings);
+  return mapToppings;
+};
+
+export const pizzaAssemblerOld = ({
+  toppings,
+  pizzas,
+  components,
+  combinedList,
 }: propType): mapToppings => {
   let mapToppings: mapToppings = {};
 

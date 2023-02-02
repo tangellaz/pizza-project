@@ -7,10 +7,16 @@ import styles from "../UserComponent.module.css";
 
 import { useDeletePizzaMutation } from "../../lib/api";
 import { mapToppings, titleCase } from "../../lib/utils";
+import { useAppSelector } from "../../redux/hooks";
 
-import { ChefProps } from "./chef.types";
+const Chef = () => {
+  const assembledPizzas = useAppSelector((state) => state.assembledPizzas);
+  const toppings = useAppSelector((state) => state.toppings);
+  const pizzas = useAppSelector((state) => state.pizzas);
+  console.log("chef", { toppings });
+  console.log("chef", { pizzas });
+  console.log("chef", { assembledPizzas });
 
-const Chef = ({ toppings, pizzas = [], assembledPizzas }: ChefProps) => {
   const [pizzaSelect, setPizzaSelect] = useState<pizzaData>({
     pizza_id: -999,
     pizza_name: "",
@@ -30,6 +36,7 @@ const Chef = ({ toppings, pizzas = [], assembledPizzas }: ChefProps) => {
     setShowModal(true);
   };
   const handleDeletePizza = async (pizzaToDelete: pizzaData) => {
+    console.log("DELETE");
     await deletePizza(pizzaToDelete);
   };
 
@@ -65,7 +72,7 @@ const Chef = ({ toppings, pizzas = [], assembledPizzas }: ChefProps) => {
                 item={pizza}
               />
               <ul className={styles.listDisplay}>
-                {assembledPizzas
+                {assembledPizzas && assembledPizzas[pizza.pizza_id]
                   ? assembledPizzas[pizza.pizza_id].map((topping, i) => (
                       <li key={pizza.pizza_id + topping.topping_id}>
                         {titleCase(topping.topping_name)}
@@ -87,8 +94,8 @@ const Chef = ({ toppings, pizzas = [], assembledPizzas }: ChefProps) => {
         selectedPizza={pizzaSelect}
         selectedToppings={toppingSelect}
         availableToppings={toppings}
-        pizzas={pizzas}
-        assembledPizzas={assembledPizzas}
+        // pizzas={pizzas}
+        // assembledPizzas={assembledPizzas}
       />
     </div>
   );

@@ -65,16 +65,16 @@ import { propType } from "./utils";
 
 export const pizzaApi = createApi({
   reducerPath: "pizzaApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `${process.env.API_URL}api/` }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${process.env.API_URL}api` }),
   tagTypes: ["Topping", "Pizza"],
   endpoints: (build) => ({
     getData: build.query<propType, void>({
-      query: () => "users/chef",
+      query: () => "",
       providesTags: ["Topping", "Pizza"],
     }),
     editTopping: build.mutation<void, toppingData>({
       query: (topping) => ({
-        url: "users/owner",
+        url: "/users/owner",
         method: "POST",
         body: topping,
       }),
@@ -82,7 +82,7 @@ export const pizzaApi = createApi({
     }),
     deleteTopping: build.mutation<void, toppingData>({
       query: (topping) => ({
-        url: "users/owner",
+        url: "/users/owner",
         method: "DELETE",
         body: topping,
       }),
@@ -93,7 +93,7 @@ export const pizzaApi = createApi({
       { pizza: pizzaData; toppings: toppingData[] }
     >({
       query: (data) => ({
-        url: "users/chef",
+        url: "/users/chef",
         method: "POST",
         body: data,
       }),
@@ -101,7 +101,7 @@ export const pizzaApi = createApi({
     }),
     deletePizza: build.mutation<void, pizzaData>({
       query: (data) => ({
-        url: "users/chef",
+        url: "/users/chef",
         method: "DELETE",
         body: data,
       }),

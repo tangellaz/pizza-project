@@ -10,8 +10,15 @@ const assembledPizzasSlice = createSlice({
   name: "assembledPizza",
   initialState: initialState,
   reducers: {
+    // setAssembledPizzas: (state, action: PayloadAction<mapToppings>) => {
+    //   return { ...state, ...action.payload };
+    // },
     setAssembledPizzas: (state, action: PayloadAction<mapToppings>) => {
-      return { ...state, ...action.payload };
+      const next = { ...state };
+      Object.keys(state).forEach((key) => {
+        action.payload.hasOwnProperty(key) ? null : delete next[key];
+      });
+      return { ...next, ...action.payload };
     },
   },
 });

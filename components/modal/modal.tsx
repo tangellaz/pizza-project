@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import styles from "./modal.module.css";
 
 import { useEditPizzaMutation } from "../../lib/api";
+import { useAppSelector } from "../../redux/hooks";
 import { handleRequest } from "../../lib/api";
 import {
   mapToppings,
@@ -21,9 +22,11 @@ const Modal = ({
   selectedPizza,
   selectedToppings,
   availableToppings,
-  pizzas,
-  assembledPizzas,
-}: ModalProps) => {
+}: // pizzas,
+// assembledPizzas,
+ModalProps) => {
+  const assembledPizzas = useAppSelector((state) => state.assembledPizzas);
+  const pizzas = useAppSelector((state) => state.pizzas);
   const [editPizza] = useEditPizzaMutation();
   const [error, setError] = useState<string>("");
 

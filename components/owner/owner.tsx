@@ -5,13 +5,13 @@ import EditTopping from "../edit-topping/edit-topping";
 import styles from "../UserComponent.module.css";
 
 import { useDeleteToppingMutation } from "../../lib/api";
+import { useAppSelector } from "../../redux/hooks";
 
 import { handleRequest } from "../../lib/api";
 import { titleCase } from "../../lib/utils";
 
-import { OwnerProps } from "./owner.types";
-
-const Owner = ({ toppings }: OwnerProps) => {
+const Owner = () => {
+  const toppings = useAppSelector((state) => state.toppings);
   const [toppingSelect, setToppingSelect] = useState<toppingData[]>();
   const [editToppingId, setEditToppingId] = useState<number>(NaN);
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
