@@ -22,14 +22,18 @@
   box-shadow: var(--box-shadow);
   /*  border: 1px solid rgba(255,255,255,0);*/
   border-radius: 0.75rem;
-  padding: 0 calc(var(--gap) / 2);
+  padding: 0;
+  padding-left: calc(var(--gap) / 2);
   transition: var(--transition);
 }
 .userSelectContainer:hover {
   box-shadow: none;
   /*  border: 1px solid rgba(255,255,255,.25);*/
 }
-.userSelectContainer > select {
+.userSelectContainer > label {
+  pointer-events: none;
+}
+/*.userSelectContainer > select {
   background: var(--dark);
   border: none;
   color: var(--text);
@@ -42,6 +46,66 @@
 .userSelectContainer > select:focus {
   box-shadow: none;
 }
+.userSelectContainer > select > optgroup {
+  font-size: clamp(1rem, 0.91rem + 0.45vw, 1.2rem);
+}*/
+
+.dropdownContainer {
+  position: relative;
+}
+.inputWrapper {
+  position: relative;
+}
+.inputWrapper > input {
+  width: 114px;
+  border: none;
+  color: var(--text);
+  background: var(--dark);
+  font-size: 1rem;
+  font-family: cantarell;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.userSelectContainer:hover input {
+  background: rgba(255, 255, 255, 0.25);
+}
+.inputWrapper > input:focus {
+  box-shadow: none;
+}
+.inputWrapper > img {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  filter: invert(100%);
+  pointer-events: none;
+}
+.dropdowns {
+  position: absolute;
+  bottom: 0;
+  left: 0rem;
+  transform: translateY(100%);
+  font-size: 1rem;
+  width: 114px;
+  display: flex;
+  flex-direction: column;
+  background: var(--dark);
+  border-radius: 0.75rem;
+  box-shadow: var(--box-shadow);
+  margin: 0;
+}
+.dropdowns:hover {
+  box-shadow: none;
+}
+.dropdowns > li {
+  cursor: pointer;
+  padding: 0.15rem 0.5rem;
+}
+.dropdowns > li:hover {
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.25);
+}
+
 .userSelectContainer > select > optgroup {
   font-size: clamp(1rem, 0.91rem + 0.45vw, 1.2rem);
 }
