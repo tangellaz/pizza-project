@@ -25,7 +25,6 @@ export default function Home() {
   const dropdownsRef = useRef<HTMLUListElement>(null);
   const [user, setUser] = useState<string>("Select user");
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
-  console.log("user", user);
 
   useEffect(() => {
     if (data) {
